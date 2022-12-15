@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<meta name="date" content="2022-12-14" />
+
+<title>Sampling functions</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Sampling functions</h1>
+<h4 class="date">2022-12-14</h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>SIMplyBee includes functions to sample various values that are expected to vary between colonies and events. These functions are used to sample numbers, usually individuals, and proportions. We can use the functions, pass them to other functions, or save them in the <code>SimParamBee</code> object so they can be used by default by other functions.</p>
+<p>We start by loading the package:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="at">package =</span> <span class="st">&quot;SIMplyBee&quot;</span>)</span></code></pre></div>
+</div>
+<div id="functions-to-sample-numbers" class="section level1">
+<h1>Functions to sample numbers</h1>
+<p>First, there are functions to sample the number of caste individuals from either a Poisson or truncated Poisson distribution: <code>n*Poisson()</code> and <code>n*TruncPoisson()</code>, where <code>*</code> is either <code>Workers</code>, <code>Drones</code>, <code>VirginQueens</code>, or <code>Fathers</code>. Most SIMplyBee functions that take the number of individuals as an argument can accept these sampling functions as an input, meaning that the output of such function calls will be stochastic. These functions are useful when you want to sample a variable number of individuals around a mean, as for example when mating virgin queens with a variable number of drones.</p>
+<p>Let’s start a simulation by creating a DCA and an apiary with 10 virgin colonies:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>founderGenomes <span class="ot">&lt;-</span> <span class="fu">quickHaplo</span>(<span class="at">nInd =</span> <span class="dv">20</span>, <span class="at">nChr =</span> <span class="dv">1</span>, <span class="at">segSites =</span> <span class="dv">100</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>SP <span class="ot">&lt;-</span> SimParamBee<span class="sc">$</span><span class="fu">new</span>(founderGenomes)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>basePop <span class="ot">&lt;-</span> <span class="fu">createVirginQueens</span>(founderGenomes)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a DCA from the first 10 base virgin queens</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>DCA <span class="ot">&lt;-</span> <span class="fu">createDrones</span>(<span class="at">x =</span> basePop[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], <span class="at">nInd =</span> <span class="dv">100</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an apiary with 10 virgin colonies</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>apiary <span class="ot">&lt;-</span> <span class="fu">createMultiColony</span>(basePop[<span class="dv">11</span><span class="sc">:</span><span class="dv">20</span>])</span></code></pre></div>
+<p>From the literature we know that virgin queens on average mate to 17 drones, but the actual number varies around this mean. Some mate with 10 drones, some with 20, etc. To resemble this variation, we can use the function <code>nFathersPoisson()</code> to sample variable number of drones from a DCA. The default average for this function is 15, but you can use any value you want. Let’s use this function to sample 1,000 values and inspect the distribution and the mean.</p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Let’s now use this functionality to sample a variable number of drones from the DCA to mate with each of the 10 virgin queens.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>droneGroups <span class="ot">&lt;-</span> <span class="fu">pullDroneGroupsFromDCA</span>(<span class="at">DCA =</span> DCA, <span class="at">n =</span> <span class="dv">10</span>, <span class="at">nDrones =</span> nFathersPoisson)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>apiary <span class="ot">&lt;-</span> <span class="fu">cross</span>(apiary, <span class="at">drones =</span> droneGroups)</span></code></pre></div>
+<p>And inspect the number of fathers in each of the colony and their mean.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nFathers</span>(apiary)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1  2  3  4  5  6  7  8  9 10 </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15 13 11 15 19 15 18 23 14 16</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">nFathers</span>(apiary))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 15.9</span></span></code></pre></div>
+<p>Second, we have a group of functions that will sample the number of individuals according to the colony phenotype, whatever that might be. These functions are named <code>n*ColonyPhenotype()</code>, where <code>*</code> is either is either <code>Workers</code>, <code>Drones</code>, or <code>VirginQueens</code>. An example of this would be sampling the number of workers and drones according to queen’s fecundity or honey yield. An example of this can be seen in the quantitative genetics vignette in the “Strength and honey yield” example.</p>
+</div>
+<div id="functions-that-sample-proportions" class="section level1">
+<h1>Functions that sample proportions</h1>
+<p>SIMplyBee also includes functions to sample the proportions of workers that leave or are removed when downsizing, splitting, or swarming a colony from either a uniform distribution or from a beta distribution that accounts for the number of individuals in a colony (colony strength). These functions are named <code>*PUnif()</code>, where <code>*</code> can be either <code>swarm</code>, <code>split</code>, or <code>downsize</code>. There is an additional function, <code>splitPColonyStrength()</code>, that determines the number of workers to be removed in a split according to the colony strength.</p>
+<p>Let’s say we want to swarm all the colonies in our apiary with a variable percentage of workers that leave. We want to sample this percentage from an uniform distribution with the mean of 0.6. For this, we use <code>swarmPUnif()</code> function that takes a <code>min</code> and a <code>max</code> values and sample a value between them. By default, the <code>min</code> is set to 0.4 and <code>max</code> to 0.6. Let’s use this function to sample a 1,000 values between 0.5 and 0.7 and inspect the mean.</p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Let’s now swarm all the colonies in our apiary with a variable percentage of workers that leave.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>apiary <span class="ot">&lt;-</span> <span class="fu">buildUp</span>(apiary, <span class="at">nWorkers =</span> <span class="dv">1000</span>, <span class="at">nDrones =</span> <span class="dv">100</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">swarm</span>(apiary, <span class="at">p =</span> <span class="fu">swarmPUnif</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">min =</span> <span class="fl">0.5</span>, <span class="at">max =</span> <span class="fl">0.7</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nWorkers</span>(tmp<span class="sc">$</span>swarm)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  11  13  15  17  19  21  23  25  27  29 </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 642 640 605 538 657 573 539 695 628 546</span></span></code></pre></div>
+<p>We see that each colony swarmed with a different percentage between 0.5 and 0.7.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
