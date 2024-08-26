@@ -5,16 +5,18 @@
 \alias{areFathersPresent}
 \title{Are fathers present (=queen mated)}
 \usage{
-isFathersPresent(x)
+isFathersPresent(x, simParamBee = NULL)
 
-areFathersPresent(x)
+areFathersPresent(x, simParamBee = NULL)
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
 logical, named by colony id when \code{x} is
-  \code{\link{MultiColony-class}}
+  \code{\link[SIMplyBee]{MultiColony-class}}
 }
 \description{
 Level 0 function that returns fathers presence status (are they
@@ -28,6 +30,7 @@ Level 0 function that returns fathers presence status (are they
 \examples{
 founderGenomes <- quickHaplo(nInd = 8, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 drones <- createDrones(x = basePop[1], nInd = 1000)

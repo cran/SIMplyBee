@@ -11,18 +11,6 @@ library(package = "SIMplyBee")
 ## ----founder genomes----------------------------------------------------------
 founderGenomes <- quickHaplo(nInd = 2, nChr = 3, segSites = 100)
 
-## ----simulate honeybee genomes------------------------------------------------
-founderGenomes2 <- simulateHoneyBeeGenomes(nMelN = 4,
-                                           nCar = 2,
-                                           nChr = 3,
-                                           nSegSites = 5)
-
-## ----save Rdata file----------------------------------------------------------
-save(founderGenomes2, file="FounderGenomes2_3chr.RData")
-
-## ----deeper looking to the arguments------------------------------------------
-??simulateHoneybeeGenomes
-
 ## ----SimParamBee--------------------------------------------------------------
 SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 32)
 SP$nWorkers <- 100
@@ -31,8 +19,8 @@ SP$nDrones <- 10
 ## ----SP, eval = FALSE---------------------------------------------------------
 #  print(SP)
 
-## ----initialization_diagram, echo=FALSE, out.width='100%', fig.cap = "Simulation initiation."----
-knitr::include_graphics("../man/figures/founderpop.png")
+## ----initialization_diagram, echo=FALSE, out.width='100%', fig.cap = "Simulation initiation"----
+knitr::include_graphics("founderpop.png")
 
 ## ----base pop virgin queens---------------------------------------------------
 baseQueens <- createVirginQueens(founderGenomes)
@@ -48,14 +36,14 @@ colony <- createColony(x = baseQueens[2])
 colony
 
 ## ----cross colony-------------------------------------------------------------
-colony <- cross(colony, drones = baseDrones)
+colony <- cross(colony, drones = baseDrones, checkCross = "warning")
 colony
 
 ## ----build up colony----------------------------------------------------------
 buildUp(colony, nWorkers = 10, nDrones = 7)
 buildUp(colony)
 
-## -----------------------------------------------------------------------------
+## ----buildup and save---------------------------------------------------------
 colony <- buildUp(colony)
 colony
 
@@ -89,12 +77,12 @@ nVirginQueens(colony)
 ## ----colony castes via get 5--------------------------------------------------
 (virginQueens <- getVirginQueens(colony))
 
-## -----------------------------------------------------------------------------
+## ----remnant------------------------------------------------------------------
 tmp <- pullWorkers(colony, n = 10)
 colony <- tmp$remnant
 colony
 
-## -----------------------------------------------------------------------------
+## ----pulled workers-----------------------------------------------------------
 pulledWorkers <- tmp$pulled
 pulledWorkers
 
@@ -108,7 +96,7 @@ getCaste(fathers)
 bees <- c(queen, fathers[1:2], workers[1:2], drones[1:2])
 getCaste(bees)
 
-## -----------------------------------------------------------------------------
+## ----misc---------------------------------------------------------------------
 getMisc(getQueen(colony))
 
 ## ----csd----------------------------------------------------------------------
@@ -117,7 +105,7 @@ getCsdAlleles(queen)
 ## ----inbred colony------------------------------------------------------------
 inbredColony <- createColony(x = createVirginQueens(x = colony, nInd = 1))
 fathers <- selectInd(drones, nInd = SP$nFathers, use = "rand")
-inbredColony <- cross(inbredColony, drones = fathers)
+inbredColony <- cross(inbredColony, drones = fathers, checkCross = "warning")
 getCsdAlleles(inbredColony)
 getCsdAlleles(inbredColony, unique = TRUE)
 

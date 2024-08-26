@@ -7,7 +7,7 @@
 getId(x)
 }
 \arguments{
-\item{x}{\code{\link{Pop-class}}, \code{\link{Colony-class}}, or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[AlphaSimR]{Pop-class}}, \code{\link[SIMplyBee]{Colony-class}}, or \code{\link[SIMplyBee]{MultiColony-class}}}
 }
 \value{
 character, \code{NA} when queen not present
@@ -19,6 +19,7 @@ Level 0 function that returns the colony ID. This is by
 \examples{
 founderGenomes <- quickHaplo(nInd = 8, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 drones <- createDrones(x = basePop[1], nInd = 1000)

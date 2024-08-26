@@ -10,11 +10,12 @@ removeColonies(
   n = NULL,
   p = NULL,
   by = NULL,
-  removeTop = FALSE
+  removeTop = FALSE,
+  simParamBee = NULL
 )
 }
 \arguments{
-\item{multicolony}{\code{\link{MultiColony-class}}}
+\item{multicolony}{\code{\link[SIMplyBee]{MultiColony-class}}}
 
 \item{ID}{character or numeric, ID of a colony (one or more) to be
 removed}
@@ -25,16 +26,18 @@ removed}
 over \code{n})}
 
 \item{by}{matrix, matrix of values to select by with names being
-colony IDs (can be obtained with \code{\link{calcColonyValue}}.
+colony IDs (can be obtained with \code{\link[SIMplyBee]{calcColonyValue}}.
 If NULL, the colonies are removed at random.
 This parameter is used in combination
 with \code{n} or \code{p} to determine the number of removed colonies, and
 \code{removeTop} to determine whether to remove the best or the worst colonies.}
 
 \item{removeTop}{logical, remove highest (lowest) values if \code{TRUE} (\code{FALSE})}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
-\code{\link{MultiColony-class}} with some colonies removed
+\code{\link[SIMplyBee]{MultiColony-class}} with some colonies removed
 }
 \description{
 Level 3 function that removes some colonies
@@ -43,6 +46,7 @@ Level 3 function that removes some colonies
 \examples{
 founderGenomes <- quickHaplo(nInd = 5, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 mean <- c(10, 10 / SP$nWorkers)
 varA <- c(1, 1 / SP$nWorkers)
 corA <- matrix(data = c(

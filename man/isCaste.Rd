@@ -6,6 +6,7 @@
 \alias{isFather}
 \alias{isWorker}
 \alias{isDrone}
+\alias{isVirginQueens}
 \alias{isVirginQueen}
 \title{Is individual a member of a specific caste}
 \usage{
@@ -19,15 +20,17 @@ isWorker(x, simParamBee = NULL)
 
 isDrone(x, simParamBee = NULL)
 
+isVirginQueens(x, simParamBee = NULL)
+
 isVirginQueen(x, simParamBee = NULL)
 }
 \arguments{
-\item{x}{\code{\link{Pop-class}}}
+\item{x}{\code{\link[AlphaSimR]{Pop-class}}}
 
 \item{caste}{character, one of "queen", "fathers", "workers", "drones", or
 "virginQueens"; only single value is used}
 
-\item{simParamBee}{\code{\link{SimParamBee}}, global simulation parameters}
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
 logical
@@ -46,12 +49,15 @@ Level 0 function that tests if individuals are members of a
 
 \item \code{isDrone()}: Is individual a drone
 
+\item \code{isVirginQueens()}: Is individual a virgin queen
+
 \item \code{isVirginQueen()}: Is individual a virgin queen
 
 }}
 \examples{
 founderGenomes <- quickHaplo(nInd = 8, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 drones <- createDrones(x = basePop[1], nInd = 1000)
@@ -102,7 +108,8 @@ isVirginQueen(getVirginQueens(colony, nInd = 2))
 
 }
 \seealso{
-\code{\link{isQueen}}, \code{\link{isFather}},
-  \code{\link{isVirginQueen}}, \code{\link{isWorker}}, and
-  \code{\link{isDrone}}
+\code{\link[SIMplyBee]{isQueen}}, \code{\link[SIMplyBee]{isFather}},
+  \code{\link[SIMplyBee]{isVirginQueen}},
+  \code{\link[SIMplyBee]{isWorker}}, and
+  \code{\link[SIMplyBee]{isDrone}}
 }

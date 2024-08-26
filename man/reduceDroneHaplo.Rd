@@ -9,7 +9,7 @@ reduceDroneHaplo(haplo, pop)
 \arguments{
 \item{haplo}{\code{\link{matrix-class}}}
 
-\item{pop}{\code{\link{Pop-class}}}
+\item{pop}{\code{\link[AlphaSimR]{Pop-class}}}
 }
 \value{
 matrix with one haplotype per drone instead of two - the order of
@@ -29,12 +29,13 @@ While this function is meant to work on male (drone) haplotypes, we
 \examples{
 founderGenomes <- quickHaplo(nInd = 3, nChr = 1, segSites = 5)
 SP <- SimParamBee$new(founderGenomes, csdChr = NULL)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 drones <- createDrones(x = basePop[1], nInd = 2)
 
-(tmp <- getSegSiteHaplo(drones))
+(tmp <- getSegSiteHaplo(drones, dronesHaploid = FALSE))
 reduceDroneHaplo(haplo = tmp, pop = drones)
 
-(tmp <- getSegSiteHaplo(c(basePop, drones)))
+(tmp <- getSegSiteHaplo(c(basePop, drones), dronesHaploid = FALSE))
 reduceDroneHaplo(haplo = tmp, pop = c(basePop, drones))
 }

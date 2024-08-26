@@ -14,34 +14,42 @@ pullCastePop(
   nInd = NULL,
   use = "rand",
   removeFathers = TRUE,
-  collapse = FALSE
+  collapse = FALSE,
+  simParamBee = NULL
 )
 
-pullQueen(x, collapse = FALSE)
+pullQueen(x, collapse = FALSE, simParamBee = NULL)
 
-pullWorkers(x, nInd = NULL, use = "rand", collapse = FALSE)
+pullWorkers(x, nInd = NULL, use = "rand", collapse = FALSE, simParamBee = NULL)
 
 pullDrones(
   x,
   nInd = NULL,
   use = "rand",
   removeFathers = TRUE,
-  collapse = FALSE
+  collapse = FALSE,
+  simParamBee = NULL
 )
 
-pullVirginQueens(x, nInd = NULL, use = "rand", collapse = FALSE)
+pullVirginQueens(
+  x,
+  nInd = NULL,
+  use = "rand",
+  collapse = FALSE,
+  simParamBee = NULL
+)
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 
 \item{caste}{character, "queen", "workers", "drones", or "virginQueens"}
 
 \item{nInd}{numeric, number of individuals to pull, if \code{NULL} all
-individuals are pulled. If input is \code{\link{MultiColony-class}},
+individuals are pulled. If input is \code{\link[SIMplyBee]{MultiColony-class}},
 the input could also be a vector of the same length as the number of colonies. If
 a single value is provided, the same value will be applied to all the colonies.}
 
-\item{use}{character, all options provided by \code{\link{selectInd}}}
+\item{use}{character, all options provided by \code{\link[AlphaSimR]{selectInd}}}
 
 \item{removeFathers}{logical, removes \code{drones} that have already mated;
 set to \code{FALSE} if you would like to get drones for mating with multiple
@@ -49,18 +57,20 @@ virgin queens, say via insemination}
 
 \item{collapse}{logical, whether to return a single merged population
 for the pulled individuals (does not affect the remnant colonies)}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
-list of \code{\link{Pop-class}} and \code{\link{Colony-class}}
-  when \code{x} is \code{\link{Colony-class}} and list of (a list of
-  \code{\link{Pop-class}} named by colony id) and
-  \code{\link{MultiColony-class}} when \code{x} is
-  \code{\link{MultiColony-class}}
+list of \code{\link[AlphaSimR]{Pop-class}} and \code{\link[SIMplyBee]{Colony-class}}
+  when \code{x} is \code{\link[SIMplyBee]{Colony-class}} and list of (a list of
+  \code{\link[AlphaSimR]{Pop-class}} named by colony id) and
+  \code{\link[SIMplyBee]{MultiColony-class}} when \code{x} is
+  \code{\link[SIMplyBee]{MultiColony-class}}
 }
 \description{
 Level 1 function that pulls individuals from a caste in a
   colony. These individuals are removed from the colony (compared to
-  \code{\link{getCaste}}).
+  \code{\link[SIMplyBee]{getCaste}}).
 }
 \section{Functions}{
 \itemize{
@@ -76,6 +86,7 @@ Level 1 function that pulls individuals from a caste in a
 \examples{
 founderGenomes <- quickHaplo(nInd = 8, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 drones <- createDrones(x = basePop[1], nInd = 1000)
@@ -115,6 +126,6 @@ pullCastePop(apiary, caste = "queen", collapse = TRUE)
 pullCastePop(apiary, caste = "virginQueens", collapse = TRUE)
 }
 \seealso{
-\code{\link{pullQueen}}, \code{\link{pullVirginQueens}},
-  \code{\link{pullWorkers}}, and \code{\link{pullDrones}}
+\code{\link[SIMplyBee]{pullQueen}}, \code{\link[SIMplyBee]{pullVirginQueens}},
+  \code{\link[SIMplyBee]{pullWorkers}}, and \code{\link[SIMplyBee]{pullDrones}}
 }

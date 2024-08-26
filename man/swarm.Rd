@@ -4,14 +4,23 @@
 \alias{swarm}
 \title{Swarm}
 \usage{
-swarm(x, p = NULL, year = NULL, nVirginQueens = NULL, simParamBee = NULL, ...)
+swarm(
+  x,
+  p = NULL,
+  year = NULL,
+  nVirginQueens = NULL,
+  sampleLocation = TRUE,
+  radius = NULL,
+  simParamBee = NULL,
+  ...
+)
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 
 \item{p}{numeric, proportion of workers that will leave with the swarm colony;
-if \code{NULL} then \code{\link{SimParamBee}$swarmP} is used.
-If input is \code{\link{MultiColony-class}},
+if \code{NULL} then \code{\link[SIMplyBee]{SimParamBee}$swarmP} is used.
+If input is \code{\link[SIMplyBee]{MultiColony-class}},
 the input could also be a vector of the same length as the number of colonies. If
 a single value is provided, the same value will be applied to all the colonies}
 
@@ -22,15 +31,23 @@ colony; of these one is randomly selected as the new virgin queen of the
 remnant colony. If \code{NULL}, the value from \code{simParamBee$nVirginQueens}
 is used}
 
-\item{simParamBee}{\code{\link{SimParamBee}}, global simulation parameters}
+\item{sampleLocation}{logical, sample location of the swarm by taking
+the current colony location and adding deviates to each coordinate using
+\code{\link[SIMplyBee]{rcircle}}}
+
+\item{radius}{numeric, radius of a circle within which swarm will go; if
+\code{NULL} then \code{\link[SIMplyBee]{SimParamBee}$swarmRadius} is used (which uses
+\code{0}, so by default swarm does not fly far away)}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 
 \item{...}{additional arguments passed to \code{p} or \code{nVirginQueens}
 when these arguments are functions}
 }
 \value{
-list with two \code{\link{Colony-class}} or \code{\link{MultiColony-class}},
-the \code{swarm} and the \code{remnant} (see the description what each colony holds!); both
-outputs have the swarm event set to \code{TRUE}
+list with two \code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}},
+  the \code{swarm} and the \code{remnant} (see the description what each
+  colony holds!); both outputs have the swarm event set to \code{TRUE}
 }
 \description{
 Level 2 function that swarms a Colony or MultiColony object -
@@ -38,11 +55,13 @@ Level 2 function that swarms a Colony or MultiColony object -
   leaves with a proportion of workers to create a new colony (the swarm). The
   remnant colony retains the other proportion of workers and all drones, and
   the workers raise virgin queens, of which only one prevails. Location of
-  the swarm is the same as for the remnant (for now).
+  the swarm is the same as for the remnant or sampled as deviation from the
+  remnant.
 }
 \examples{
 founderGenomes <- quickHaplo(nInd = 8, nChr = 1, segSites = 50)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 drones <- createDrones(basePop[1], n = 1000)
 droneGroups <- pullDroneGroupsFromDCA(drones, n = 10, nDrones = 10)

@@ -6,19 +6,21 @@
 \alias{nHomBrood}
 \title{The expected proportion and a realised number of csd homozygous brood}
 \usage{
-calcQueensPHomBrood(x)
+calcQueensPHomBrood(x, simParamBee = NULL)
 
-pHomBrood(x)
+pHomBrood(x, simParamBee = NULL)
 
-nHomBrood(x)
+nHomBrood(x, simParamBee = NULL)
 }
 \arguments{
-\item{x}{\code{\link{Pop-class}}, \code{\link{Colony-class}}, or
-\code{\link{MultiColony-class}}}
+\item{x}{\code{\link[AlphaSimR]{Pop-class}}, \code{\link[SIMplyBee]{Colony-class}}, or
+\code{\link[SIMplyBee]{MultiColony-class}}}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
 numeric, expected csd homozygosity named by colony id when \code{x}
-  is \code{\link{MultiColony-class}}
+  is \code{\link[SIMplyBee]{MultiColony-class}}
 }
 \description{
 Level 0 functions that calculate or report the proportion of csd
@@ -43,6 +45,7 @@ produced by a queen
 # This is a bit long example - the key is at the end!
 founderGenomes <- quickHaplo(nInd = 8, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 drones <- createDrones(x = basePop[1], nInd = 1000)

@@ -10,11 +10,12 @@ pullColonies(
   n = NULL,
   p = NULL,
   by = NULL,
-  pullTop = TRUE
+  pullTop = TRUE,
+  simParamBee = NULL
 )
 }
 \arguments{
-\item{multicolony}{\code{\link{MultiColony-class}}}
+\item{multicolony}{\code{\link[SIMplyBee]{MultiColony-class}}}
 
 \item{ID}{character or numeric, ID of a colony (one or more) to be pulled
 out}
@@ -25,16 +26,18 @@ out}
 over \code{n})}
 
 \item{by}{matrix, matrix of values to select by with names being
-colony IDs (can be obtained with \code{\link{calcColonyValue}}.
+colony IDs (can be obtained with \code{\link[SIMplyBee]{calcColonyValue}}.
 If NULL, the colonies are pulled at random.
 This parameter is used in combination
 with \code{n} or \code{p} to determine the number of pulled colonies, and
 \code{pullTop} to determine whether to pull the best or the worst colonies.}
 
 \item{pullTop}{logical, pull highest (lowest) values if \code{TRUE} (\code{FALSE})}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
-list with two \code{\link{MultiColony-class}}, the \code{pulled}
+list with two \code{\link[SIMplyBee]{MultiColony-class}}, the \code{pulled}
   and the \code{remnant}
 }
 \description{
@@ -44,6 +47,7 @@ Level 3 function that pulls out some colonies
 \examples{
 founderGenomes <- quickHaplo(nInd = 5, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 mean <- c(10, 10 / SP$nWorkers)
 varA <- c(1, 1 / SP$nWorkers)
 corA <- matrix(data = c(

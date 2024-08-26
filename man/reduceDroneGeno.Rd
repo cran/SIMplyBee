@@ -9,7 +9,7 @@ reduceDroneGeno(geno, pop)
 \arguments{
 \item{geno}{\code{\link{matrix-class}}}
 
-\item{pop}{\code{\link{Pop-class}}}
+\item{pop}{\code{\link[AlphaSimR]{Pop-class}}}
 }
 \value{
 matrix with genotype as one haplotype per drone instead of two - the
@@ -24,6 +24,7 @@ Level 0 function that reduces drone's genotype to a single
 \examples{
 founderGenomes <- quickHaplo(nInd = 3, nChr = 1, segSites = 5)
 SP <- SimParamBee$new(founderGenomes, csdChr = NULL)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 drones <- createDrones(x = basePop[1], nInd = 2)
 

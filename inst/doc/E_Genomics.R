@@ -15,11 +15,8 @@ baseQueens <- createVirginQueens(founderGenomes)
 baseDrones <- createDrones(x = baseQueens[1], nInd = 15)
 
 colony <- createColony(x = baseQueens[2])
-colony <- cross(colony, drones = baseDrones)
+colony <- cross(colony, drones = baseDrones, checkCross = "warning")
 colony <- buildUp(colony)
-
-## ----help II------------------------------------------------------------------
-help(SIMplyBee)
 
 ## ----queens haplo-------------------------------------------------------------
 getSegSiteHaplo(colony, caste = "queen")[, 1:10]

@@ -7,12 +7,12 @@
 combine(strong, weak)
 }
 \arguments{
-\item{strong}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{strong}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 
-\item{weak}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{weak}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 }
 \value{
-a combined \code{\link{Colony-class}} or \code{\link{MultiColony-class}}
+a combined \code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}
 }
 \description{
 Level 2 function that combines two Colony or MultiColony objects
@@ -25,6 +25,7 @@ Level 2 function that combines two Colony or MultiColony objects
 \examples{
 founderGenomes <- quickHaplo(nInd = 10, nChr = 1, segSites = 50)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 drones <- createDrones(basePop[1], n = 1000)
 droneGroups <- pullDroneGroupsFromDCA(drones, n = 10, nDrones = 10)

@@ -7,7 +7,7 @@
 supersede(x, year = NULL, nVirginQueens = NULL, simParamBee = NULL, ...)
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 
 \item{year}{numeric, year of birth for virgin queens}
 
@@ -16,13 +16,13 @@ colony; of these one is randomly selected as the new virgin queen of the
 remnant colony. If \code{NULL}, the value from \code{simParamBee$nVirginQueens}
 is used}
 
-\item{simParamBee}{\code{\link{SimParamBee}}, global simulation parameters}
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 
 \item{...}{additional arguments passed to \code{nVirginQueens} when this
 argument is a function}
 }
 \value{
-\code{\link{Colony-class}} or \code{\link{MultiColony-class}} with the
+\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}} with the
 supersede event set to \code{TRUE}
 }
 \description{
@@ -34,6 +34,7 @@ Level 2 function that supersedes a Colony or MultiColony object -
 \examples{
 founderGenomes <- quickHaplo(nInd = 10, nChr = 1, segSites = 50)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 drones <- createDrones(basePop[1], n = 1000)
 droneGroups <- pullDroneGroupsFromDCA(drones, n = 10, nDrones = 10)
@@ -48,17 +49,17 @@ apiary <- buildUp(apiary, nWorkers = 100)
 
 # Supersede a colony
 isQueenPresent(colony)
-isVirginQueensPresent(colony)
+isVirginQueenPresent(colony)
 colony <- supersede(colony)
 isQueenPresent(colony)
-isVirginQueensPresent(colony)
+isVirginQueenPresent(colony)
 
 # Supersede all colonies in the apiary
 isQueenPresent(colony)
-isVirginQueensPresent(colony)
+isVirginQueenPresent(colony)
 apiary1 <- supersede(apiary)
 isQueenPresent(colony)
-isVirginQueensPresent(colony)
+isVirginQueenPresent(colony)
 
 # Sample colonies from the apiary that will supersede (sample with probability of 0.2)
 tmp <- pullColonies(apiary, p = 0.2)

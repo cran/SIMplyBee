@@ -9,14 +9,14 @@ setClassUnion("numericOrFunction", c("numeric", "function"))
 #'   object as \code{SP} will allow it to be accessed by SIMplyBee functions
 #'   without repeatedly (and annoyingly!) typing out
 #'   \code{someFun(argument, simParamBee = SP)}. \code{SimParamBee} inherits
-#'   from AlphaSimR \code{\link{SimParam}}, so all \code{\link{SimParam}} slots
+#'   from AlphaSimR \code{\link[AlphaSimR]{SimParam}}, so all \code{\link[AlphaSimR]{SimParam}} slots
 #'   and functions are available in addition to \code{SimParamBee}-specific
-#'   slots and functions. Some \code{\link{SimParam}} functions could have
+#'   slots and functions. Some \code{\link[AlphaSimR]{SimParam}} functions could have
 #'   upgraded behaviour as documented in line with honeybee biology.
 #'
 #' @details This documentation shows details specific to \code{SimParamBee}. We
 #'   suggest you also read all the options provided by the AlphaSimR
-#'   \code{\link{SimParam}}. Below we show minimal usage cases for each
+#'   \code{\link[AlphaSimR]{SimParam}}. Below we show minimal usage cases for each
 #'   \code{SimParamBee} function.
 #'
 #' See also \code{vignette(package = "SIMplyBee")} for descriptions of how
@@ -33,8 +33,8 @@ SimParamBee <- R6Class(
 
     # nWorkers field ----
     #' @field nWorkers numeric or function, a number of workers generated in a
-    #'   colony - used in \code{\link{createWorkers}}, \code{\link{addWorkers}},
-    #'   \code{\link{buildUp}}.
+    #'   colony - used in \code{\link[SIMplyBee]{createWorkers}}, \code{\link[SIMplyBee]{addWorkers}},
+    #'   \code{\link[SIMplyBee]{buildUp}}.
     #'
     #'   The default value is 100, that is, queen generates 100 workers - this
     #'   is for a down-scaled simulation (for efficiency) assuming that this
@@ -49,16 +49,16 @@ SimParamBee <- R6Class(
     #'   argument MUST be \code{colony} and any following arguments MUST have a
     #'   default value.
     #'   For flexibility you can add ... argument to pass on any other argument.
-    #'   See \code{\link{nWorkersPoisson}}, \code{\link{nWorkersTruncPoisson}},
-    #'   or \code{\link{nWorkersColonyPhenotype}} for examples.
+    #'   See \code{\link[SIMplyBee]{nWorkersPoisson}}, \code{\link[SIMplyBee]{nWorkersTruncPoisson}},
+    #'   or \code{\link[SIMplyBee]{nWorkersColonyPhenotype}} for examples.
     #'
     #'   You can provide your own functions that satisfy your needs!
     nWorkers = "numericOrFunction",
 
     # nDrones field ----
     #' @field nDrones numeric or function, a number of drones generated in a
-    #'   colony - used in \code{\link{createDrones}}, \code{\link{addDrones}},
-    #'   \code{\link{buildUp}}.
+    #'   colony - used in \code{\link[SIMplyBee]{createDrones}}, \code{\link[SIMplyBee]{addDrones}},
+    #'   \code{\link[SIMplyBee]{buildUp}}.
     #'
     #'   The default value is 100, that is, queen generates 100 drones - this is
     #'   for a down-scaled simulation (for efficiency) assuming that this
@@ -73,8 +73,8 @@ SimParamBee <- R6Class(
     #'   argument MUST be \code{x} and any following arguments MUST have a
     #'   default value.
     #'   For flexibility you can add ... argument to pass on any other argument.
-    #'   See \code{\link{nDronesPoisson}}, \code{\link{nDronesTruncPoisson}}, or
-    #'   \code{\link{nDronesColonyPhenotype}} for examples.
+    #'   See \code{\link[SIMplyBee]{nDronesPoisson}}, \code{\link[SIMplyBee]{nDronesTruncPoisson}}, or
+    #'   \code{\link[SIMplyBee]{nDronesColonyPhenotype}} for examples.
     #'
     #'   You can provide your own functions that satisfy your needs!
     nDrones = "numericOrFunction",
@@ -82,7 +82,7 @@ SimParamBee <- R6Class(
     # nVirginQueens field ----
     #' @field nVirginQueens numeric or function, a number of virgin queens
     #'   generated when a queen dies or other situations - used in
-    #'   \code{\link{createVirginQueens}} and \code{\link{addVirginQueens}}.
+    #'   \code{\link[SIMplyBee]{createVirginQueens}} and \code{\link[SIMplyBee]{addVirginQueens}}.
     #'
     #'   The default value is 10, that is, when the queen dies, workers generate
     #'   10 new virgin queens (Seeley, 2019). This value is set in
@@ -96,17 +96,17 @@ SimParamBee <- R6Class(
     #'   argument MUST be \code{colony} and any following arguments MUST have a
     #'   default value.
     #'   For flexibility you can add ... argument to pass on any other argument.
-    #'   See \code{\link{nVirginQueensPoisson}},
-    #'   \code{\link{nVirginQueensTruncPoisson}}, or
-    #'   \code{\link{nVirginQueensColonyPhenotype}} for examples.
+    #'   See \code{\link[SIMplyBee]{nVirginQueensPoisson}},
+    #'   \code{\link[SIMplyBee]{nVirginQueensTruncPoisson}}, or
+    #'   \code{\link[SIMplyBee]{nVirginQueensColonyPhenotype}} for examples.
     #'
     #'   You can provide your own functions that satisfy your needs!
     nVirginQueens = "numericOrFunction",
 
     # nFathers field ----
     #' @field nFathers numeric or function, a number of drones a queen mates
-    #'   with  - used in \code{\link{pullDroneGroupsFromDCA}},
-    #'   \code{\link{cross}}.
+    #'   with  - used in \code{\link[SIMplyBee]{pullDroneGroupsFromDCA}},
+    #'   \code{\link[SIMplyBee]{cross}}.
     #'
     #'   The default value is 15, that is, a virgin queen mates on average with
     #'   15 drones (Seeley, 2019). This value is set in \code{SimParamBee$new()}
@@ -121,8 +121,8 @@ SimParamBee <- R6Class(
     #'   because \code{nFathers} likely does not depend on the colony. Let us
     #'   know if we are wrong!
     #'   For flexibility you can add ... argument to pass on any other argument.
-    #'   See \code{\link{nFathersPoisson}} or
-    #'   \code{\link{nFathersTruncPoisson}} for examples.
+    #'   See \code{\link[SIMplyBee]{nFathersPoisson}} or
+    #'   \code{\link[SIMplyBee]{nFathersTruncPoisson}} for examples.
     #'
     #'   You can provide your own functions that satisfy your needs!
     nFathers = "numericOrFunction",
@@ -130,7 +130,7 @@ SimParamBee <- R6Class(
     # swarmP field ----
     #' @field swarmP numeric or a function, the swarm proportion - the proportion
     #'   of workers that leave with the old queen when the colony swarms - used
-    #'   in \code{\link{swarm}}.
+    #'   in \code{\link[SIMplyBee]{swarm}}.
     #'
     #'   The default value is 0.50, that is, about a half of workers leave colony
     #'   in a swarm (Seeley, 2019). This value is set in \code{SimParamBee$new()}
@@ -144,16 +144,28 @@ SimParamBee <- R6Class(
     #'   argument MUST be \code{colony} and any following arguments MUST have a
     #'   default value.
     #'   For flexibility you can add ... argument to pass on any other argument.
-    #'   See \code{\link{swarmPUnif}} for
+    #'   See \code{\link[SIMplyBee]{swarmPUnif}} for
     #'   examples.
     #'
     #'   You can provide your own functions that satisfy your needs!
     swarmP = "numericOrFunction",
 
+    # swarmRadius field ----
+    #' @field swarmRadius numeric, radius within which to sample a location of
+    #'   of the swarm - used in \code{\link[SIMplyBee]{swarm}} - see its \code{radius}
+    #'   argument.
+    #'
+    #'   The default value is \code{0}, that is, swarm gets the same location as
+    #'   the original colony.
+    #'
+    #'   You can change this setting to your needs!
+    #'
+    swarmRadius = "numeric",
+
     # splitP field ----
     #' @field splitP numeric or a function, the split proportion - the
     #'   proportion of workers removed in a managed split - used in
-    #'   \code{\link{split}}.
+    #'   \code{\link[SIMplyBee]{split}}.
     #'
     #'   The default value is 0.30, that is, about a third of workers is put into
     #'   a split colony from a strong colony (Seeley, 2019). This value is set
@@ -167,7 +179,7 @@ SimParamBee <- R6Class(
     #'   argument MUST be \code{colony} and any following arguments MUST have a
     #'   default value.
     #'   For flexibility you can add ... argument to pass on any other argument.
-    #'   See \code{\link{splitPUnif}} or \code{\link{splitPColonyStrength}} for
+    #'   See \code{\link[SIMplyBee]{splitPUnif}} or \code{\link[SIMplyBee]{splitPColonyStrength}} for
     #'   examples.
     #'
     #'   You can provide your own functions that satisfy your needs!
@@ -176,7 +188,7 @@ SimParamBee <- R6Class(
     # downsizeP field ----
     #' @field downsizeP numeric or a function, the downsize proportion - the
     #'   proportion of workers removed from the colony when downsizing, usually
-    #'   in autumn - used in \code{\link{downsize}}.
+    #'   in autumn - used in \code{\link[SIMplyBee]{downsize}}.
     #'
     #'   The default value is 0.85, that is, a majority of workers die before
     #'   autumn or all die but some winter workers are created (Seeley, 2019).
@@ -191,22 +203,22 @@ SimParamBee <- R6Class(
     #'   argument MUST be \code{colony} and any following arguments MUST have a
     #'   default value.
     #'   For flexibility you can add ... argument to pass on any other argument.
-    #'   See \code{\link{downsizePUnif}} for example.
+    #'   See \code{\link[SIMplyBee]{downsizePUnif}} for example.
     #'
     #'   You can provide your own functions that satisfy your needs!
     downsizeP = "numericOrFunction",
 
     # colonyValueFUN field ----
     #' @field colonyValueFUN function, to calculate colony values - used
-    #'   in \code{\link{calcColonyValue}} - see also \code{\link{calcColonyPheno}}
-    #'   and \code{\link{calcColonyGv}}.
+    #'   in \code{\link[SIMplyBee]{calcColonyValue}} - see also \code{\link[SIMplyBee]{calcColonyPheno}}
+    #'   and \code{\link[SIMplyBee]{calcColonyGv}}.
     #'
     #'   This function should work with internals of others functions -
     #'   therefore the function MUST be defined like \code{function(colony, arg
     #'   = default) someCode }, that is, the first argument MUST be
     #'   \code{colony} and any following arguments MUST have a default value.
     #'   For flexibility you can add ... argument to pass on any other argument.
-    #'   See \code{\link{mapCasteToColonyValue}} for an example.
+    #'   See \code{\link[SIMplyBee]{mapCasteToColonyValue}} for an example.
     #'
     #'   You can provide your own functions that satisfy your needs!
     colonyValueFUN = "function",
@@ -215,15 +227,16 @@ SimParamBee <- R6Class(
     #'   a new SimParamBee object and assigning a founder population of genomes
     #'   to the this object.
     #'
-    #' @param founderPop \code{\link{MapPop-class}}, founder population of
+    #' @param founderPop \code{\link[AlphaSimR]{MapPop-class}}, founder population of
     #'   genomes
-    #' @param nWorkers see \code{\link{SimParamBee}} field \code{nWorkers}
-    #' @param nDrones see \code{\link{SimParamBee}} field \code{nDrones}
-    #' @param nVirginQueens see \code{\link{SimParamBee}} field \code{nVirginQueens}
-    #' @param nFathers see \code{\link{SimParamBee}} field \code{nFathers}
-    #' @param swarmP see \code{\link{SimParamBee}} field \code{swarmP}
-    #' @param splitP see \code{\link{SimParamBee}} field \code{splitP}
-    #' @param downsizeP see \code{\link{SimParamBee}} field \code{downsizeP}
+    #' @param nWorkers see \code{\link[SIMplyBee]{SimParamBee}} field \code{nWorkers}
+    #' @param nDrones see \code{\link[SIMplyBee]{SimParamBee}} field \code{nDrones}
+    #' @param nVirginQueens see \code{\link[SIMplyBee]{SimParamBee}} field \code{nVirginQueens}
+    #' @param nFathers see \code{\link[SIMplyBee]{SimParamBee}} field \code{nFathers}
+    #' @param swarmP see \code{\link[SIMplyBee]{SimParamBee}} field \code{swarmP}
+    #' @param swarmRadius see \code{\link[SIMplyBee]{SimParamBee}} field \code{swarmRadius}
+    #' @param splitP see \code{\link[SIMplyBee]{SimParamBee}} field \code{splitP}
+    #' @param downsizeP see \code{\link[SIMplyBee]{SimParamBee}} field \code{downsizeP}
     #' @param csdChr integer, chromosome that will carry the csd locus, by
     #'   default 3, but if there are less chromosomes (for a simplified
     #'   simulation), the locus is put on the last available chromosome (1 or
@@ -238,44 +251,49 @@ SimParamBee <- R6Class(
     #'   then \code{csdChr=NULL} is triggered. By default we set \code{nCsdAlleles}
     #'   to 128, which is at the upper end of the reported number of csd alleles
     #'   (Lechner et al., 2014; Zareba et al., 2017; Bovo et al., 2021).
-    #' @param colonyValueFUN see \code{\link{SimParamBee}} field \code{colonyValueFUN}
+    #' @param colonyValueFUN see \code{\link[SIMplyBee]{SimParamBee}} field \code{colonyValueFUN}
     #'
     #' @references
     #' Bovo et al. (2021) Application of Next Generation Semiconductor-Based
     #'   Sequencing for the Identification of Apis mellifera Complementary Sex
     #'   Determiner (csd) Alleles from Honey DNA. Insects, 12(10), 868.
-    #'   \doi{/10.3390/insects12100868}
+    #'   \doi{10.3390/insects12100868}
     #'
     #' Lechner et al. (2014) Nucleotide variability at its limit? Insights into
     #'  the number and evolutionary dynamics of the sex-determining specificities
     #'  of the honey bee Apis mellifera Molecular Biology and Evolution, 31,
-    #'  272-287. \doi{/10.1093/molbev/mst207}
+    #'  272-287. \doi{10.1093/molbev/mst207}
     #'
     #' Seeley (2019) The Lives of Bees: The Untold Story of the Honey
     #'   Bee in the Wild. Princeton: Princeton University Press.
-    #'   \doi{/10.1515/9780691189383}
+    #'   \doi{10.1515/9780691189383}
     #'
     #' Zareba et al. (2017) Uneven distribution of complementary sex determiner
     #'   (csd) alleles in Apis mellifera population. Scientific Reports, 7, 2317.
-    #'   \doi{/10.1038/s41598-017-02629-9}
+    #'   \doi{10.1038/s41598-017-02629-9}
     #'
     #' @examples
     #' founderGenomes <- quickHaplo(nInd = 10, nChr = 3, segSites = 10)
     #' SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 2)
+    #' \dontshow{SP$nThreads = 1L}
     #'
     #' # We need enough segregating sites
     #' try(SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100))
+    #' \dontshow{SP$nThreads = 1L}
     #' founderGenomes <- quickHaplo(nInd = 10, nChr = 3, segSites = 100)
     #' SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100)
+    #' \dontshow{SP$nThreads = 1L}
     #'
     #' # We can save the csd locus on chromosome 1 or 2, too, for quick simulations
     #' founderGenomes <- quickHaplo(nInd = 10, nChr = 1, segSites = 100)
     #' SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100)
+    #' \dontshow{SP$nThreads = 1L}
 
     initialize = function(founderPop,
                           nWorkers = 100, nDrones = 100,
                           nVirginQueens = 10, nFathers = 15,
-                          swarmP = 0.5, splitP = 0.3, downsizeP = 0.85,
+                          swarmP = 0.5, swarmRadius = 0,
+                          splitP = 0.3, downsizeP = 0.85,
                           csdChr = 3, csdPos = 0.865, nCsdAlleles = 128,
                           colonyValueFUN = NULL) {
       # Get all the goodies from AlphaSimR::SimParam$new(founderPop)
@@ -290,6 +308,7 @@ SimParamBee <- R6Class(
       self$nVirginQueens <- nVirginQueens
       self$nFathers <- nFathers
       self$swarmP <- swarmP
+      self$swarmRadius <- swarmRadius
       self$splitP <- splitP
       self$downsizeP <- downsizeP
 
@@ -355,6 +374,7 @@ SimParamBee <- R6Class(
     #' @examples
     #' founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
     #' SP <- SimParamBee$new(founderGenomes)
+    #' \dontshow{SP$nThreads = 1L}
     #' SP$setTrackPed(isTrackPed = TRUE)
     #' basePop <- createVirginQueens(founderGenomes)
     #'
@@ -383,6 +403,7 @@ SimParamBee <- R6Class(
     #' @examples
     #' founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
     #' SP <- SimParamBee$new(founderGenomes)
+    #' \dontshow{SP$nThreads = 1L}
     #' SP$setTrackPed(isTrackPed = TRUE)
     #' basePop <- createVirginQueens(founderGenomes)
     #' SP$pedigree
@@ -427,25 +448,22 @@ SimParamBee <- R6Class(
     .csdPosStop = "integer"
   ),
 
-  # Active fileds ----
+  # Active fields ----
 
   active = list(
 
     #' @field caste character, caste information for every individual ever
-    #'   created; active only when \code{SP$setTrackPed(isTrackPed = TRUE)}
+    #'   created
     caste = function(value) {
       if (missing(value)) {
-        factor(
-          x = private$.caste, levels = c("Q", "F", "W", "D", "V"),
-          labels = list("queen", "fathers", "workers", "drones", "virginQueens")
-        )
+          x = private$.caste
       } else {
         stop("`$caste` is read only", call. = FALSE)
       }
     },
 
     #' @field lastColonyId integer, ID of the last Colony object
-    #'   created with \code{\link{createColony}}
+    #'   created with \code{\link[SIMplyBee]{createColony}}
     lastColonyId = function(value) {
       if (missing(value)) {
           private$.lastColonyId
@@ -531,15 +549,16 @@ SimParamBee <- R6Class(
 #' @rdname isSimParamBee
 #' @title Test if x is a SimParamBee class object
 #'
-#' @description Test if x is a \code{\link{SimParamBee}} class object
+#' @description Test if x is a \code{\link[SIMplyBee]{SimParamBee}} class object
 #'
-#' @param x \code{\link{SimParamBee}}
+#' @param x \code{\link[SIMplyBee]{SimParamBee}}
 #'
 #' @return logical
 #'
 #' @examples
 #' founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
 #' SP <- SimParamBee$new(founderGenomes)
+#' \dontshow{SP$nThreads = 1L}
 #' isSimParamBee(SP)
 #' @export
 isSimParamBee <- function(x) {
@@ -553,25 +572,26 @@ isSimParamBee <- function(x) {
 #' @title Sample a number of workers
 #'
 #' @description Sample a number of workers - used when \code{nInd = NULL}
-#'   (see \code{\link{SimParamBee}$nWorkers}).
+#'   (see \code{\link[SIMplyBee]{SimParamBee}$nWorkers}).
 #'
 #'   This is just an example. You can provide your own functions that satisfy
 #'   your needs!
 #'
-#' @param colony \code{\link{Colony-class}}
+#' @param colony \code{\link[SIMplyBee]{Colony-class}}
 #' @param n integer, number of samples
 #' @param average numeric, average number of workers
 #' @param lowerLimit numeric, returned numbers will be above this value
 #' @param queenTrait numeric (column position) or character (column name), trait
 #'   that represents queen's effect on the colony phenotype (defined in
-#'   \code{\link{SimParamBee}} - see examples); if \code{0} then this effect is 0
+#'   \code{\link[SIMplyBee]{SimParamBee}} - see examples); if \code{0} then this effect is 0
 #' @param workersTrait numeric (column position) or character (column name), trait
 #'   that represents workers's effect on the colony phenotype (defined in
-#'   \code{\link{SimParamBee}} - see examples); if \code{0} then this effect is 0
+#'   \code{\link[SIMplyBee]{SimParamBee}} - see examples); if \code{0} then this effect is 0
 #' @param checkProduction logical, does the phenotype depend on the production
 #'   status of colony; if yes and production is not \code{TRUE}, the result is
 #'   above \code{lowerLimit}
-#' @param ... other arguments of \code{\link{mapCasteToColonyPheno}}
+#' @param simParamBee \code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters
+#' @param ... other arguments of \code{\link[SIMplyBee]{mapCasteToColonyPheno}}
 #'
 #' @details \code{nWorkersPoisson} samples from a Poisson distribution with a
 #'   given average, which can return a value 0. \code{nDronesTruncPoisson}
@@ -579,11 +599,11 @@ isSimParamBee <- function(x) {
 #'
 #'   \code{nWorkersColonyPhenotype} returns a number (above \code{lowerLimit})
 #'   as a function of colony phenotype, say queen's fecundity. Colony phenotype
-#'   is provided by \code{\link{mapCasteToColonyPheno}}. You need to set up
+#'   is provided by \code{\link[SIMplyBee]{mapCasteToColonyPheno}}. You need to set up
 #'   traits influencing the colony phenotype and their parameters (mean and
-#'   variances) via \code{\link{SimParamBee}} (see examples).
+#'   variances) via \code{\link[SIMplyBee]{SimParamBee}} (see examples).
 #'
-#' @seealso \code{\link{SimParamBee}} field \code{nWorkers} and
+#' @seealso \code{\link[SIMplyBee]{SimParamBee}} field \code{nWorkers} and
 #'   \code{vignette(topic = "QuantitativeGenetics", package = "SIMplyBee")}
 #'
 #' @return numeric, number of workers
@@ -604,6 +624,7 @@ isSimParamBee <- function(x) {
 #' # Example for nWorkersColonyPhenotype()
 #' founderGenomes <- quickHaplo(nInd = 3, nChr = 1, segSites = 100)
 #' SP <- SimParamBee$new(founderGenomes)
+#' \dontshow{SP$nThreads = 1L}
 #' average <- 100
 #' h2 <- 0.1
 #' SP$addTraitA(nQtlPerChr = 100, mean = average, var = average * h2)
@@ -635,12 +656,17 @@ nWorkersTruncPoisson <- function(colony, n = 1, average = 100, lowerLimit = 0) {
 #' @export
 nWorkersColonyPhenotype <- function(colony, queenTrait = 1, workersTrait = NULL,
                                     checkProduction = FALSE, lowerLimit = 0,
+                                    simParamBee = NULL,
                                     ...) {
+  if (is.null(simParamBee)) {
+    simParamBee <- get(x = "SP", envir = .GlobalEnv)
+  }
   ret <- round(mapCasteToColonyPheno(
     colony = colony,
     queenTrait = queenTrait,
     workersTrait = workersTrait,
     checkProduction = checkProduction,
+    simParamBee = simParamBee,
     ...
   ))
   if (ret < (lowerLimit + 1)) {
@@ -653,25 +679,26 @@ nWorkersColonyPhenotype <- function(colony, queenTrait = 1, workersTrait = NULL,
 #' @title Sample a number of drones
 #'
 #' @description Sample a number of drones - used when \code{nDrones = NULL}
-#'   (see \code{\link{SimParamBee}$nDrones}).
+#'   (see \code{\link[SIMplyBee]{SimParamBee}$nDrones}).
 #'
 #'   This is just an example. You can provide your own functions that satisfy
 #'   your needs!
 #'
-#' @param x \code{\link{Pop-class}} or \code{\link{Colony-class}}
+#' @param x \code{\link[AlphaSimR]{Pop-class}} or \code{\link[SIMplyBee]{Colony-class}}
 #' @param n integer, number of samples
 #' @param average numeric, average number of drones
 #' @param lowerLimit numeric, returned numbers will be above this value
 #' @param queenTrait numeric (column position) or character (column name), trait
 #'   that represents queen's effect on the colony phenotype (defined in
-#'   \code{\link{SimParamBee}} - see examples); if \code{0} then this effect is 0
+#'   \code{\link[SIMplyBee]{SimParamBee}} - see examples); if \code{0} then this effect is 0
 #' @param workersTrait numeric (column position) or character (column name), trait
 #'   that represents workers's effect on the colony phenotype (defined in
-#'   \code{\link{SimParamBee}} - see examples); if \code{0} then this effect is 0
+#'   \code{\link[SIMplyBee]{SimParamBee}} - see examples); if \code{0} then this effect is 0
 #' @param checkProduction logical, does the phenotype depend on the production
 #'   status of colony; if yes and production is not \code{TRUE}, the result is
 #'   above \code{lowerLimit}
-#' @param ... other arguments of \code{\link{mapCasteToColonyPheno}}
+#' @param simParamBee \code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters
+#' @param ... other arguments of \code{\link[SIMplyBee]{mapCasteToColonyPheno}}
 #'
 #' @details \code{nDronesPoisson} samples from a Poisson distribution with a
 #'   given average, which can return a value 0.
@@ -681,14 +708,14 @@ nWorkersColonyPhenotype <- function(colony, queenTrait = 1, workersTrait = NULL,
 #'
 #'   \code{nDronesColonyPhenotype} returns a number (above \code{lowerLimit}) as
 #'   a function of colony phenotype, say queen's fecundity. Colony phenotype is
-#'   provided by \code{\link{mapCasteToColonyPheno}}. You need to set up
+#'   provided by \code{\link[SIMplyBee]{mapCasteToColonyPheno}}. You need to set up
 #'   traits influencing the colony phenotype and their parameters (mean and
-#'   variances) via \code{\link{SimParamBee}} (see examples).
+#'   variances) via \code{\link[SIMplyBee]{SimParamBee}} (see examples).
 #'
-#'   When \code{x} is \code{\link{Pop-class}}, only \code{workersTrait} is not
+#'   When \code{x} is \code{\link[AlphaSimR]{Pop-class}}, only \code{workersTrait} is not
 #'   used, that is, only \code{queenTrait} is used.
 #'
-#' @seealso \code{\link{SimParamBee}} field \code{nDrones} and
+#' @seealso \code{\link[SIMplyBee]{SimParamBee}} field \code{nDrones} and
 #'   \code{vignette(topic = "QuantitativeGenetics", package = "SIMplyBee")}
 #'
 #' @return numeric, number of drones
@@ -709,6 +736,7 @@ nWorkersColonyPhenotype <- function(colony, queenTrait = 1, workersTrait = NULL,
 #' # Example for nDronesColonyPhenotype()
 #' founderGenomes <- quickHaplo(nInd = 3, nChr = 1, segSites = 100)
 #' SP <- SimParamBee$new(founderGenomes)
+#' \dontshow{SP$nThreads = 1L}
 #' average <- 100
 #' h2 <- 0.1
 #' SP$addTraitA(nQtlPerChr = 100, mean = average, var = average * h2)
@@ -740,7 +768,11 @@ nDronesTruncPoisson <- function(x, n = 1, average = 100, lowerLimit = 0) {
 #' @export
 nDronesColonyPhenotype <- function(x, queenTrait = 1, workersTrait = NULL,
                                    checkProduction = FALSE, lowerLimit = 0,
+                                   simParamBee = NULL,
                                    ...) {
+  if (is.null(simParamBee)) {
+    simParamBee <- get(x = "SP", envir = .GlobalEnv)
+  }
   # This one is special because we cater drone production from base population
   #   virgin queens and colonies
   if (isPop(x)) {
@@ -751,6 +783,7 @@ nDronesColonyPhenotype <- function(x, queenTrait = 1, workersTrait = NULL,
       queenTrait = queenTrait,
       workersTrait = workersTrait,
       checkProduction = checkProduction,
+      simParamBee = simParamBee,
       ...
     ))
   }
@@ -764,25 +797,26 @@ nDronesColonyPhenotype <- function(x, queenTrait = 1, workersTrait = NULL,
 #' @title Sample a number of virgin queens
 #'
 #' @description Sample a number of virgin queens - used when
-#'   \code{nFathers = NULL} (see \code{\link{SimParamBee}$nVirginQueens}).
+#'   \code{nFathers = NULL} (see \code{\link[SIMplyBee]{SimParamBee}$nVirginQueens}).
 #'
 #'   This is just an example. You can provide your own functions that satisfy
 #'   your needs!
 #'
-#' @param colony \code{\link{Colony-class}}
+#' @param colony \code{\link[SIMplyBee]{Colony-class}}
 #' @param n integer, number of samples
 #' @param average numeric, average number of virgin queens
 #' @param lowerLimit numeric, returned numbers will be above this value
 #' @param queenTrait numeric (column position) or character (column name), trait
 #'   that represents queen's effect on the colony phenotype (defined in
-#'   \code{\link{SimParamBee}} - see examples); if \code{NULL} then this effect is 0
+#'   \code{\link[SIMplyBee]{SimParamBee}} - see examples); if \code{NULL} then this effect is 0
 #' @param workersTrait numeric (column position) or character (column name), trait
 #'   that represents workers's effect on the colony phenotype (defined in
-#'   \code{\link{SimParamBee}} - see examples); if \code{NULL} then this effect is 0
+#'   \code{\link[SIMplyBee]{SimParamBee}} - see examples); if \code{NULL} then this effect is 0
 #' @param checkProduction logical, does the phenotype depend on the production
 #'   status of colony; if yes and production is not \code{TRUE}, the result is
 #'   above \code{lowerLimit}
-#' @param ... other arguments of \code{\link{mapCasteToColonyPheno}}
+#' @param simParamBee \code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters
+#' @param ... other arguments of \code{\link[SIMplyBee]{mapCasteToColonyPheno}}
 #'
 #' @details \code{nVirginQueensPoisson} samples from a Poisson distribution,
 #'   which can return a value 0 (that would mean a colony will fail to raise a
@@ -794,11 +828,11 @@ nDronesColonyPhenotype <- function(x, queenTrait = 1, workersTrait = NULL,
 #'   \code{nVirginQueensColonyPhenotype} returns a number (above
 #'   \code{lowerLimit}) as a function of colony phenotype, say swarming
 #'   tendency. Colony phenotype is provided by
-#'   \code{\link{mapCasteToColonyPheno}}. You need to set up traits
+#'   \code{\link[SIMplyBee]{mapCasteToColonyPheno}}. You need to set up traits
 #'   influencing the colony phenotype and their parameters (mean and variances)
-#'   via \code{\link{SimParamBee}} (see examples).
+#'   via \code{\link[SIMplyBee]{SimParamBee}} (see examples).
 #'
-#' @seealso \code{\link{SimParamBee}} field \code{nVirginQueens} and
+#' @seealso \code{\link[SIMplyBee]{SimParamBee}} field \code{nVirginQueens} and
 #'   \code{vignette(topic = "QuantitativeGenetics", package = "SIMplyBee")}
 #'
 #' @return numeric, number of virgin queens
@@ -819,6 +853,7 @@ nDronesColonyPhenotype <- function(x, queenTrait = 1, workersTrait = NULL,
 #' # Example for nVirginQueensColonyPhenotype()
 #' founderGenomes <- quickHaplo(nInd = 3, nChr = 1, segSites = 100)
 #' SP <- SimParamBee$new(founderGenomes)
+#' \dontshow{SP$nThreads = 1L}
 #' # Setting trait scale such that mean is 10 split into queen and workers effects
 #' meanP <- c(5, 5 / SP$nWorkers)
 #' # setup variances such that the total phenotype variance will match the mean
@@ -861,11 +896,18 @@ nVirginQueensTruncPoisson <- function(colony, n = 1, average = 10, lowerLimit = 
 nVirginQueensColonyPhenotype <- function(colony, queenTrait = 1,
                                          workersTrait = 2,
                                          checkProduction = FALSE,
-                                         lowerLimit = 0, ...) {
+                                         lowerLimit = 0,
+                                         simParamBee = NULL,
+                                         ...) {
+  if (is.null(simParamBee)) {
+    simParamBee <- get(x = "SP", envir = .GlobalEnv)
+  }
   ret <- round(mapCasteToColonyPheno(
     colony = colony,
     queenTrait = queenTrait,
-    workersTrait = workersTrait, ...
+    workersTrait = workersTrait,
+    simParamBee = simParamBee,
+    ...
   ))
   if (ret < (lowerLimit + 1)) {
     ret <- lowerLimit + 1
@@ -877,7 +919,7 @@ nVirginQueensColonyPhenotype <- function(colony, queenTrait = 1,
 #' @title Sample a number of fathers
 #'
 #' @description Sample a number of fathers - use when \code{nFathers = NULL}
-#'   (see \code{\link{SimParamBee}$nFathers}).
+#'   (see \code{\link[SIMplyBee]{SimParamBee}$nFathers}).
 #'
 #'   This is just an example. You can provide your own functions that satisfy
 #'   your needs!
@@ -892,7 +934,7 @@ nVirginQueensColonyPhenotype <- function(colony, queenTrait = 1,
 #'   \code{nFathersTruncPoisson} samples from a truncated Poisson distribution
 #'   (truncated at zero) to avoid failed matings.
 #'
-#' @seealso \code{\link{SimParamBee}} field \code{nFathers}
+#' @seealso \code{\link[SIMplyBee]{SimParamBee}} field \code{nFathers}
 #'
 #' @return numeric, number of fathers
 #'
@@ -925,12 +967,12 @@ nFathersTruncPoisson <- function(n = 1, average = 15, lowerLimit = 0) {
 #' @title Sample the swarm proportion - the proportion of workers that swarm
 #'
 #' @description Sample the swarm proportion - the proportion of workers that
-#'   swarm - used when \code{p = NULL} (see \code{\link{SimParamBee}$swarmP}).
+#'   swarm - used when \code{p = NULL} (see \code{\link[SIMplyBee]{SimParamBee}$swarmP}).
 #'
 #'   This is just an example. You can provide your own functions that satisfy
 #'   your needs!
 #'
-#' @param colony \code{\link{Colony-class}}
+#' @param colony \code{\link[SIMplyBee]{Colony-class}}
 #' @param n integer, number of samples
 #' @param min numeric, lower limit for \code{swarmPUnif}
 #' @param max numeric, upper limit for \code{swarmPUnif}
@@ -943,7 +985,7 @@ nFathersTruncPoisson <- function(n = 1, average = 15, lowerLimit = 0) {
 #'   simulation for efficiency). If you simulate more workers, you should change
 #'   the default accordingly.
 #'
-#' @seealso \code{\link{SimParamBee}} field \code{swarmP}
+#' @seealso \code{\link[SIMplyBee]{SimParamBee}} field \code{swarmP}
 #'
 #' @return numeric, swarm proportion
 #'
@@ -963,12 +1005,12 @@ swarmPUnif <- function(colony, n = 1, min = 0.4, max = 0.6) {
 #'
 #' @description Sample the split proportion - proportion of removed workers in a
 #'   managed split - used when \code{p = NULL} - (see
-#'   \code{\link{SimParamBee}$splitP}).
+#'   \code{\link[SIMplyBee]{SimParamBee}$splitP}).
 #'
 #'   This is just an example. You can provide your own functions that satisfy
 #'   your needs!
 #'
-#' @param colony \code{\link{Colony-class}}
+#' @param colony \code{\link[SIMplyBee]{Colony-class}}
 #' @param n integer, number of samples
 #' @param min numeric, lower limit for \code{splitPUnif}
 #' @param max numeric, upper limit for \code{splitPUnif}
@@ -993,7 +1035,7 @@ swarmPUnif <- function(colony, n = 1, min = 0.4, max = 0.6) {
 #'   simulation for efficiency). If you simulate more workers, you should change
 #'   the default accordingly.
 #'
-#' @seealso \code{\link{SimParamBee}} field \code{splitP}
+#' @seealso \code{\link[SIMplyBee]{SimParamBee}} field \code{splitP}
 #'
 #' @return numeric, split proportion
 #'
@@ -1006,6 +1048,7 @@ swarmPUnif <- function(colony, n = 1, min = 0.4, max = 0.6) {
 #' # Example for splitPColonyStrength()
 #' founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
 #' SP <- SimParamBee$new(founderGenomes)
+#' \dontshow{SP$nThreads = 1L}
 #' basePop <- createVirginQueens(founderGenomes)
 #' drones <- createDrones(x = basePop[1], nInd = 15)
 #' colony <- createColony(x = basePop[2])
@@ -1056,17 +1099,17 @@ splitPColonyStrength <- function(colony, n = 1, nWorkersFull = 100, scale = 1) {
 #'
 #' @description Sample the downsize proportion - proportion of removed workers
 #'   in downsizing - used when \code{p = NULL} (see
-#'   \code{\link{SimParamBee}$downsizeP}).
+#'   \code{\link[SIMplyBee]{SimParamBee}$downsizeP}).
 #'
 #'   This is just an example. You can provide your own functions that satisfy
 #'   your needs!
 #'
-#' @param colony \code{\link{Colony-class}}
+#' @param colony \code{\link[SIMplyBee]{Colony-class}}
 #' @param n integer, number of samples
 #' @param min numeric, lower limit for \code{downsizePUnif}
 #' @param max numeric, upper limit for \code{downsizePUnif}
 #'
-#' @seealso \code{\link{SimParamBee}} field \code{downsizeP}
+#' @seealso \code{\link[SIMplyBee]{SimParamBee}} field \code{downsizeP}
 #'
 #' @return numeric, downsize proportion
 #'
@@ -1087,9 +1130,9 @@ downsizePUnif <- function(colony, n = 1, min = 0.8, max = 0.9) {
 #'
 #' @description Maps caste member (individual) values to a colony value - for
 #'   phenotype, genetic, breeding, dominance, and epistasis values. This function
-#'   can be used as \code{FUN} argument in \code{\link{calcColonyValue}}
+#'   can be used as \code{FUN} argument in \code{\link[SIMplyBee]{calcColonyValue}}
 #'   function(s). It can also be saved in \code{SimParamBee$colonyValueFUN} as a
-#'   default function called by \code{\link{calcColonyValue}} function(s).
+#'   default function called by \code{\link[SIMplyBee]{calcColonyValue}} function(s).
 #'
 #'   This is just an example - quite a flexible one! You can provide your
 #'   own "caste functions" that satisfy your needs within this mapping function
@@ -1100,7 +1143,7 @@ downsizePUnif <- function(colony, n = 1, min = 0.8, max = 0.9) {
 #'   Note though that you can achieve this impact also via multiple correlated
 #'   traits, such as a queen and a workers trait.
 #'
-#' @param colony \code{\link{Colony-class}}
+#' @param colony \code{\link[SIMplyBee]{Colony-class}}
 #' @param value character, one of \code{pheno} or \code{gv}
 #' @param queenTrait numeric (column position) or character (column name),
 #'   trait(s) that represents queen's contribution to colony value(s); if
@@ -1132,24 +1175,25 @@ downsizePUnif <- function(colony, n = 1, min = 0.8, max = 0.9) {
 #' @param notProductiveValue numeric, returned value when colony is not productive;
 #'   you can pass more than one logical value here (one per trait coming out of
 #'   \code{combineFUN})
-#' @param simParamBee \code{\link{SimParamBee}}, global simulation parameters
+#' @param simParamBee \code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters
 #' @param ... other arguments of \code{mapCasteToColonyValue} (for its aliases)
 #'
-#' @seealso \code{\link{SimParamBee}} field \code{colonyValueFUN} and functions
-#'   \code{\link{calcColonyValue}}, \code{\link{calcColonyPheno}},
-#'   \code{\link{calcColonyGv}}, \code{\link{getEvents}},
-#'   \code{\link{pheno}}, and \code{\link{gv}}, as well as
+#' @seealso \code{\link[SIMplyBee]{SimParamBee}} field \code{colonyValueFUN} and functions
+#'   \code{\link[SIMplyBee]{calcColonyValue}}, \code{\link[SIMplyBee]{calcColonyPheno}},
+#'   \code{\link[SIMplyBee]{calcColonyGv}}, \code{\link[SIMplyBee]{getEvents}},
+#'   \code{\link[AlphaSimR]{pheno}}, and \code{\link[AlphaSimR]{gv}}, as well as
 #'   \code{vignette(topic = "QuantitativeGenetics", package = "SIMplyBee")}
 #'
 #' @details This is a utility/mapping function meant to be called by
-#'   \code{\link{calcColonyValue}}. It only works on a single colony - use
-#'   \code{\link{calcColonyValue}} to get Colony or MultiColony values.
+#'   \code{\link[SIMplyBee]{calcColonyValue}}. It only works on a single colony - use
+#'   \code{\link[SIMplyBee]{calcColonyValue}} to get Colony or MultiColony values.
 #'
 #' @return numeric matrix with one value or a row of values
 #'
 #' @examples
 #' founderGenomes <- quickHaplo(nInd = 5, nChr = 1, segSites = 100)
 #' SP <- SimParamBee$new(founderGenomes)
+#' \dontshow{SP$nThreads = 1L}
 #'
 #' # Define two traits that collectively affect colony honey yield:
 #' # 1) queen's effect on colony honey yield, say via pheromone secretion phenotype
@@ -1274,26 +1318,41 @@ mapCasteToColonyValue <- function(colony,
 #' @describeIn mapCasteToColonyValue Map caste member (individual) phenotype values to a colony phenotype value
 #' @export
 mapCasteToColonyPheno <- function(colony, simParamBee = NULL, ...) {
+  if (is.null(simParamBee)) {
+    simParamBee <- get(x = "SP", envir = .GlobalEnv)
+  }
   mapCasteToColonyValue(colony, value = "pheno", simParamBee = simParamBee, ...)
 }
 
 #' @describeIn mapCasteToColonyValue Map caste member (individual) genetic values to a colony genetic value
 #' @export
-mapCasteToColonyGv <- function(colony, checkProduction = FALSE, simParamBee = NULL, ...) {
-  mapCasteToColonyValue(colony, value = "gv", checkProduction = checkProduction, simParamBee = simParamBee, ...)
+mapCasteToColonyGv <- function(colony, simParamBee = NULL, ...) {
+  if (is.null(simParamBee)) {
+    simParamBee <- get(x = "SP", envir = .GlobalEnv)
+  }
+  mapCasteToColonyValue(colony, value = "gv", checkProduction = FALSE, simParamBee = simParamBee, ...)
 }
 
 #' @describeIn mapCasteToColonyValue Map caste member (individual) breeding values to a colony breeding value
-mapCasteToColonyBv <- function(colony, checkProduction = FALSE, simParamBee = NULL, ...) {
-  mapCasteToColonyValue(colony, value = "bv", checkProduction = checkProduction, simParamBee = simParamBee, ...)
+mapCasteToColonyBv <- function(colony, simParamBee = NULL, ...) {
+  if (is.null(simParamBee)) {
+    simParamBee <- get(x = "SP", envir = .GlobalEnv)
+  }
+  mapCasteToColonyValue(colony, value = "bv", checkProduction = FALSE, simParamBee = simParamBee, ...)
 }
 
 #' @describeIn mapCasteToColonyValue Map caste member (individual) dominance values to a colony dominance value
-mapCasteToColonyDd <- function(colony, checkProduction = FALSE, simParamBee = NULL, ...) {
-  mapCasteToColonyValue(colony, value = "dd", checkProduction = checkProduction, simParamBee = simParamBee, ...)
+mapCasteToColonyDd <- function(colony, simParamBee = NULL, ...) {
+  if (is.null(simParamBee)) {
+    simParamBee <- get(x = "SP", envir = .GlobalEnv)
+  }
+  mapCasteToColonyValue(colony, value = "dd", checkProduction = FALSE, simParamBee = simParamBee, ...)
 }
 
 #' @describeIn mapCasteToColonyValue Map caste member (individual) epistasis values to a colony epistasis value
-mapCasteToColonyAa <- function(colony, checkProduction = FALSE, simParamBee = NULL, ...) {
-  mapCasteToColonyValue(colony, value = "aa", checkProduction = checkProduction, simParamBee = simParamBee, ...)
+mapCasteToColonyAa <- function(colony, simParamBee = NULL, ...) {
+  if (is.null(simParamBee)) {
+    simParamBee <- get(x = "SP", envir = .GlobalEnv)
+  }
+  mapCasteToColonyValue(colony, value = "aa", checkProduction = FALSE, simParamBee = simParamBee, ...)
 }

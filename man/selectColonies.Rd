@@ -10,11 +10,12 @@ selectColonies(
   n = NULL,
   p = NULL,
   by = NULL,
-  selectTop = TRUE
+  selectTop = TRUE,
+  simParamBee = NULL
 )
 }
 \arguments{
-\item{multicolony}{\code{\link{MultiColony-class}}}
+\item{multicolony}{\code{\link[SIMplyBee]{MultiColony-class}}}
 
 \item{ID}{character or numeric, ID of a colony (one or more) to be
 selected}
@@ -25,16 +26,18 @@ selected}
 over \code{n})}
 
 \item{by}{matrix, matrix of values to select by with names being
-colony IDs (can be obtained with \code{\link{calcColonyValue}}.
+colony IDs (can be obtained with \code{\link[SIMplyBee]{calcColonyValue}}.
 If NULL, the colonies are selected at random.
 This parameter is used in combination
 with \code{n} or \code{p} to determine the number of selected colonies, and
 \code{selectTop} to determine whether to select the best or the worst colonies.}
 
 \item{selectTop}{logical, selects highest (lowest) values if \code{TRUE} (\code{FALSE})}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
-\code{\link{MultiColony-class}} with selected colonies
+\code{\link[SIMplyBee]{MultiColony-class}} with selected colonies
 }
 \description{
 Level 3 function that selects colonies from
@@ -45,6 +48,7 @@ Level 3 function that selects colonies from
 \examples{
 founderGenomes <- quickHaplo(nInd = 5, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 mean <- c(10, 10 / SP$nWorkers)
 varA <- c(1, 1 / SP$nWorkers)
 corA <- matrix(data = c(

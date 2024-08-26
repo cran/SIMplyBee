@@ -19,7 +19,7 @@ DCA <- createDrones(x = basePop[1:10], nInd = 100)
 # Create an apiary with 10 virgin colonies
 apiary <- createMultiColony(basePop[11:20])
 
-## ---- echo = FALSE, fig.height = 3, fig.width = 6-----------------------------
+## ----echo = FALSE, fig.height = 3, fig.width = 6------------------------------
 oldpar <- par(mfrow = c(1,2))
 hist(nFathersPoisson(n = 1000), main = "Average = 15", xlab = "nFathers")
 # Change the average to 10
@@ -28,13 +28,13 @@ par(oldpar)
 
 ## -----------------------------------------------------------------------------
 droneGroups <- pullDroneGroupsFromDCA(DCA = DCA, n = 10, nDrones = nFathersPoisson)
-apiary <- cross(apiary, drones = droneGroups)
+apiary <- cross(apiary, drones = droneGroups, checkCross = "warning")
 
 ## -----------------------------------------------------------------------------
 nFathers(apiary)
 mean(nFathers(apiary))
 
-## ---- echo = FALSE, fig.height = 3, fig.width = 3-----------------------------
+## ----echo = FALSE, fig.height = 3, fig.width = 3------------------------------
 hist(swarmPUnif(n = 1000, min = 0.5, max = 0.7),
      xlab = "swarmP", main = "min=0.5, max=0.7", xlim = c(0, 1))
 

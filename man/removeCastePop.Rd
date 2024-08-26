@@ -27,22 +27,22 @@ removeQueen(
   simParamBee = NULL
 )
 
-removeWorkers(x, p = 1, use = "rand")
+removeWorkers(x, p = 1, use = "rand", simParamBee = NULL)
 
-removeDrones(x, p = 1, use = "rand")
+removeDrones(x, p = 1, use = "rand", simParamBee = NULL)
 
-removeVirginQueens(x, p = 1, use = "rand")
+removeVirginQueens(x, p = 1, use = "rand", simParamBee = NULL)
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 
 \item{caste}{character, "queen", "workers", "drones", or "virginQueens"}
 
-\item{p}{numeric, proportion to be removed; if input is \code{\link{MultiColony-class}},
+\item{p}{numeric, proportion to be removed; if input is \code{\link[SIMplyBee]{MultiColony-class}},
 the input could also be a vector of the same length as the number of colonies. If
 a single value is provided, the same value will be applied to all the colonies}
 
-\item{use}{character, all the options provided by \code{\link{selectInd}} -
+\item{use}{character, all the options provided by \code{\link[AlphaSimR]{selectInd}} -
 guides selection of virgins queens that will stay when \code{p < 1}}
 
 \item{addVirginQueens}{logical, whether virgin queens should be added; only
@@ -55,10 +55,10 @@ is used}
 
 \item{year}{numeric, only relevant when adding virgin queens - year of birth for virgin queens}
 
-\item{simParamBee}{\code{\link{SimParamBee}}, global simulation parameters}
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
-\code{\link{Colony-class}} or \code{\link{MultiColony-class}} without virgin queens
+\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}} without virgin queens
 }
 \description{
 Level 2 function that removes a proportion of virgin queens of
@@ -78,6 +78,7 @@ Level 2 function that removes a proportion of virgin queens of
 \examples{
 founderGenomes <- quickHaplo(nInd = 5, nChr = 1, segSites = 50)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 drones <- createDrones(x = basePop[1], nInd = 100)

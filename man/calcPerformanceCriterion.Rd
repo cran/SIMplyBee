@@ -9,11 +9,12 @@ calcPerformanceCriterion(
   queenTrait = 1,
   workersTrait = 2,
   workersTraitFUN = sum,
-  use = "gv"
+  use = "gv",
+  simParamBee = NULL
 )
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 
 \item{queenTrait}{numeric (column position) or character (column name), trait
 that represents queen's effect on the colony value; if \code{NULL}
@@ -30,11 +31,13 @@ function will depend on how you will setup simulation!}
 \item{use}{character, the measure to use for the calculation, being
 either "gv" (genetic value),"ebv" (estimated breeding value),
 or "pheno" (phenotypic value)}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
 integer when \code{x} is
-  \code{\link{Colony-class}} and a named list when \code{x} is
-  \code{\link{MultiColony-class}}, where names are colony IDs
+  \code{\link[SIMplyBee]{Colony-class}} and a named list when \code{x} is
+  \code{\link[SIMplyBee]{MultiColony-class}}, where names are colony IDs
 }
 \description{
 Level 0 function that calculates the performance criterion as the
@@ -45,6 +48,7 @@ Level 0 function that calculates the performance criterion as the
 \examples{
 founderGenomes <- quickHaplo(nInd = 8, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 meanA <- c(10, 10 / SP$nWorkers)
 varA <- c(1, 1 / SP$nWorkers)
 corA <- matrix(data = c( 1.0, -0.5,
@@ -80,10 +84,10 @@ calcPerformanceCriterion(apiary, queenTrait = 1,
 \references{
 Du, M., et al. (2021) Short-term effects of controlled mating and selection
   on the genetic variance of honeybee populations. Heredity 126, 733–747.
-  \doi{/10.1038/s41437-021-00411-2}
+  \doi{10.1038/s41437-021-00411-2}
 }
 \seealso{
-\code{\link{calcSelectionCriterion}} and
-  \code{\link{calcInheritanceCriterion}} and  as well as
+\code{\link[SIMplyBee]{calcSelectionCriterion}} and
+  \code{\link[SIMplyBee]{calcInheritanceCriterion}} and  as well as
   \code{vignette(topic = "QuantitativeGenetics", package = "SIMplyBee")}
 }

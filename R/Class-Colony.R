@@ -16,32 +16,32 @@ setClassUnion("integerOrNumericOrLogicalOrCharacter", c("integer", "numeric", "l
 #'
 #' @slot id integer, unique ID of the colony
 #' @slot location numeric, location of the colony (x, y)
-#' @slot queen \code{\link{Pop-class}}, the queen of the colony (we use
+#' @slot queen \code{\link[AlphaSimR]{Pop-class}}, the queen of the colony (we use
 #'   its misc slot for queen's age and drones (fathers) she mated with)
-#' @slot virginQueens \code{\link{Pop-class}}, virgin queens of the
+#' @slot virginQueens \code{\link[AlphaSimR]{Pop-class}}, virgin queens of the
 #'   colony
-#' @slot drones \code{\link{Pop-class}}, drones of the colony
-#' @slot workers \code{\link{Pop-class}}, workers of the colony
+#' @slot drones \code{\link[AlphaSimR]{Pop-class}}, drones of the colony
+#' @slot workers \code{\link[AlphaSimR]{Pop-class}}, workers of the colony
 #' @slot split logical, has colony split
 #' @slot swarm logical, has colony swarmed
 #' @slot supersedure logical, has colony superseded
 #' @slot collapse logical, has colony collapsed
 #' @slot production logical, is colony productive
-#' @slot last_event character, the last event of the colony TODO: revise https://github.com/HighlanderLab/SIMplyBee/issues/10
 #' @slot misc list, available for storing extra information about the colony
 #'
-#' @param object \code{\link{Colony-class}}
-#' @param x \code{\link{Colony-class}}
-#' @param ... \code{NULL}, \code{\link{Colony-class}}, or
-#'   \code{\link{MultiColony-class}}
+#' @param object \code{\link[SIMplyBee]{Colony-class}}
+#' @param x \code{\link[SIMplyBee]{Colony-class}}
+#' @param ... \code{NULL}, \code{\link[SIMplyBee]{Colony-class}}, or
+#'   \code{\link[SIMplyBee]{MultiColony-class}}
 #'
-#' @seealso \code{\link{createColony}}
+#' @seealso \code{\link[SIMplyBee]{createColony}}
 #'
-#' @return \code{\link{Colony-class}} or \code{\link{MultiColony-class}}
+#' @return \code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}
 #'
 #' @examples
 #' founderGenomes <- quickHaplo(nInd = 4, nChr = 1, segSites = 100)
 #' SP <- SimParamBee$new(founderGenomes)
+#' \dontshow{SP$nThreads = 1L}
 #' basePop <- createVirginQueens(founderGenomes)
 #'
 #' drones <- createDrones(x = basePop[1], nInd = 1000)
@@ -69,7 +69,7 @@ setClass(
   Class = "Colony",
   slots = c(
     id = "integer",
-    location = "numericOrNULL",
+    location = "numeric",
     queen = "PopOrNULL",
     workers = "PopOrNULL",
     drones = "PopOrNULL",
@@ -79,7 +79,6 @@ setClass(
     supersedure = "logicalOrNULL",
     collapse = "logicalOrNULL",
     production = "logicalOrNULL",
-    last_event = "character",
     misc = "listOrNULL"
   )
 )
@@ -95,7 +94,7 @@ setClassUnion("ColonyOrNULL", c("Colony", "NULL"))
 
 setValidity(Class = "Colony", method = function(object) {
   errors <- character()
-  if (isQueenPresent(object) && nInd(getQueen(object)) > 1) {
+  if ((ifelse(test = !is.null(slot(object, name = "queen")), yes = nInd(slot(object, name = "queen")), no = 0)) > 1) { #Don't use nQueen because of the SP problem
     errors <- c(errors, "There can be only one queen per colony!")
   }
   if (length(errors) == 0) {
@@ -158,8 +157,8 @@ setMethod(
 #' @rdname combineNULLAndPop
 #' @title Combine a NULL and AlphaSimR population
 #'
-#' @param x NULL or \code{\link{Pop-class}}
-#' @param ... list of NULL or \code{\link{Pop-class}} objects
+#' @param x NULL or \code{\link[AlphaSimR]{Pop-class}}
+#' @param ... list of NULL or \code{\link[AlphaSimR]{Pop-class}} objects
 #'
 #' @description This combine \code{c()} method is a hack to combine NULL and an
 #'   AlphaSimR population object \code{c(NULL, pop)} (\code{c(pop, NULL)} works

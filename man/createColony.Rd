@@ -4,25 +4,24 @@
 \alias{createColony}
 \title{Create a new Colony}
 \usage{
-createColony(x = NULL, location = NULL, simParamBee = NULL)
+createColony(x = NULL, simParamBee = NULL)
 }
 \arguments{
-\item{x}{\code{\link{Pop-class}}, one queen or virgin queen(s)}
+\item{x}{\code{\link[AlphaSimR]{Pop-class}}, one queen or virgin queen(s)}
 
-\item{location}{numeric, location of the colony as \code{c(x, y)}}
-
-\item{simParamBee}{\code{\link{SimParamBee}}, global simulation parameters}
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
-new \code{\link{Colony-class}}
+new \code{\link[SIMplyBee]{Colony-class}}
 }
 \description{
-Level 2 function that creates a new \code{\link{Colony-class}}
+Level 2 function that creates a new \code{\link[SIMplyBee]{Colony-class}}
   to initiate simulations.
 }
 \examples{
 founderGenomes <- quickHaplo(nInd = 5, nChr = 1, segSites = 50)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 drones <- createDrones(x = basePop[1], nInd = 15)
 

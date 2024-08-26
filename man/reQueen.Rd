@@ -4,22 +4,24 @@
 \alias{reQueen}
 \title{Re-queen}
 \usage{
-reQueen(x, queen, removeVirginQueens = TRUE)
+reQueen(x, queen, removeVirginQueens = TRUE, simParamBee = NULL)
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 
-\item{queen}{\code{\link{Pop-class}} with one individual that will be the
+\item{queen}{\code{\link[AlphaSimR]{Pop-class}} with one individual that will be the
 queen of the colony; if she is not mated, she will be added as a virgin
 queen that will have to be mated later; test will be run if the individual
-\code{\link{isVirginQueen}} or \code{\link{isQueen}}}
+\code{\link[SIMplyBee]{isVirginQueen}} or \code{\link[SIMplyBee]{isQueen}}}
 
 \item{removeVirginQueens}{logical, remove existing virgin queens, default is
-\code{\link{TRUE}} since bee-keepers tend to remove any virgin queen cells
+\code{TRUE} since bee-keepers tend to remove any virgin queen cells
 to ensure the provided queen prevails (see details)}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
-\code{\link{Colony-class}} or \code{\link{MultiColony-class}} with new queen(s) (see details)
+\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}} with new queen(s) (see details)
 }
 \description{
 Level 2 function that re-queens a Colony or
@@ -35,6 +37,7 @@ If the provided queen is mated, then she is saved in the queen slot
 \examples{
 founderGenomes <- quickHaplo(nInd = 12, nChr = 1, segSites = 50)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 drones <- createDrones(x = basePop[1], nInd = 200)

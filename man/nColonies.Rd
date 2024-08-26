@@ -13,7 +13,7 @@ nNULLColonies(multicolony)
 nEmptyColonies(multicolony)
 }
 \arguments{
-\item{multicolony}{\code{\link{MultiColony-class}}}
+\item{multicolony}{\code{\link[SIMplyBee]{MultiColony-class}}}
 }
 \value{
 integer
@@ -32,8 +32,8 @@ Level 0 function that returns the number of colonies in a
 \examples{
 founderGenomes <- quickHaplo(nInd = 5, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
-
 emptyApiary <- createMultiColony(n = 3)
 emptyApiary1 <- c(createColony(), createColony())
 nonEmptyApiary <- createMultiColony(basePop[2:3], n = 2)
@@ -57,5 +57,5 @@ nNULLColonies(nonEmptyApiary)
 
 }
 \seealso{
-\code{\link{nNULLColonies}} and \code{\link{nEmptyColonies}}
+\code{\link[SIMplyBee]{nNULLColonies}} and \code{\link[SIMplyBee]{nEmptyColonies}}
 }

@@ -4,19 +4,21 @@
 \alias{pullInd}
 \title{Pull individuals from a population}
 \usage{
-pullInd(pop, nInd = NULL, use = "rand")
+pullInd(pop, nInd = NULL, use = "rand", simParamBee = NULL)
 }
 \arguments{
-\item{pop}{\code{\link{Pop-class}}}
+\item{pop}{\code{\link[AlphaSimR]{Pop-class}}}
 
 \item{nInd}{numeric, number of individuals to pull, if \code{NULL} pull all
 individuals}
 
-\item{use}{character, all options provided by \code{\link{selectInd}}}
+\item{use}{character, all options provided by \code{\link[AlphaSimR]{selectInd}}}
+
+\item{simParamBee}{\code{\link[SIMplyBee]{SimParamBee}}, global simulation parameters}
 }
 \value{
-list with a node \code{pulled} holding \code{\link{Pop-class}} of
-  pulled individuals and a node \code{remnant)} holding \code{\link{Pop-class}}
+list with a node \code{pulled} holding \code{\link[AlphaSimR]{Pop-class}} of
+  pulled individuals and a node \code{remnant)} holding \code{\link[AlphaSimR]{Pop-class}}
   of remaining individuals
 }
 \description{
@@ -26,6 +28,7 @@ Level 1 function that pulls individuals from a population and
 \examples{
 founderGenomes <- quickHaplo(nInd = 3, nChr = 1, segSites = 100)
 SP <- SimParam$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- newPop(founderGenomes)
 
 pullInd(basePop, nInd = 2)

@@ -17,15 +17,15 @@ fatherGroups <- pullDroneGroupsFromDCA(drones, n = 30, nDrones = 10)
 
 # Create Colony and MultiColony class, cross them and build them up
 colony <- createColony(x = basePop[11])
-colony <- cross(colony, drones = fatherGroups[[1]])
+colony <- cross(colony, drones = fatherGroups[[1]], checkCross = "warning")
 colony <- buildUp(colony, nWorkers = 100, nDrones = 20)
 
 apiary <- createMultiColony(basePop[12:17])
-apiary <- cross(apiary, drones = fatherGroups[2:7])
+apiary <- cross(apiary, drones = fatherGroups[2:7], checkCross = "warning")
 apiary <- buildUp(apiary, nWorkers = 100, nDrones = 20, exact = TRUE)
 
-## ----swarm_figure, echo=FALSE, out.width='100%', fig.cap="Swarm function."----
-knitr::include_graphics("../man/figures/swarm.png")
+## ----swarm_figure, echo=FALSE, out.width='100%', fig.cap="Swarm function"-----
+knitr::include_graphics("swarm.png")
 
 ## ----swarm colony-------------------------------------------------------------
 tmp <- swarm(colony, p = 0.4)
@@ -70,8 +70,8 @@ apiary <- tmp$swarm
 apiary <- buildUp(apiary)
 apiary1 <- tmp$remnant
 
-## ----split_figure, echo=FALSE, out.width='100%', fig.cap = "Split function"----
-knitr::include_graphics("../man/figures/split.png")
+## ----split_figure, echo=FALSE, out.width='80%', fig.cap = "Split function"----
+knitr::include_graphics("split.png")
 
 ## ----split a colony-----------------------------------------------------------
 tmp <- split(colony, p = 0.3)
@@ -95,8 +95,8 @@ tmp$split[[1]]
 apiary <- tmp$remnant
 apiary <- buildUp(apiary)
 
-## ----supersede_figure, echo=FALSE, out.width='100%', fig.cap = "Supersede function"----
-knitr::include_graphics("../man/figures/supersede.png")
+## ----supersede_figure, echo=FALSE, out.width='50%', fig.cap = "Supersede function"----
+knitr::include_graphics("supersede.png")
 
 ## ----supersede Colony object--------------------------------------------------
 colony <- supersede(colony)
@@ -107,7 +107,7 @@ apiary <- supersede(apiary)
 apiary
 
 ## ----collapse_figure, echo=FALSE, out.width='50%', fig.cap = "Collapse function"----
-knitr::include_graphics("../man/figures/collapse.png")
+knitr::include_graphics("collapse.png")
 
 ## ----collapse the colony------------------------------------------------------
 colony <- collapse(colony)

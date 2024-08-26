@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2022-12-14" />
+<meta name="date" content="2024-08-26" />
 
 <title>Multiple colonies</title>
 
@@ -25,6 +25,22 @@ document.addEventListener('DOMContentLoaded', function(e) {
     if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
     a = h.attributes;
     while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
   }
 });
 </script>
@@ -338,184 +354,188 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">Multiple colonies</h1>
-<h4 class="date">2022-12-14</h4>
+<h4 class="date">2024-08-26</h4>
 
 
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>We have already introduced the Colony class that holds colony-specific information and caste individuals. However, when working with honeybees, we usually do not work with a single colony, but with apiaries or even whole populations of colonies. To cater for this, SIMplyBee provides a <code>MultiColony</code> class. It behaves as a list of <code>Colony</code> objects but with additional functionality - you can apply function directly to the <code>MultiColony</code> objects. A <code>MultiColony</code> can represent different apiaries or sub-populations in terms of either age of the queens or geographical location of the apiaries etc. This vignette demonstrates creating and working with <code>MultiColony</code> objects. First, we again load the package.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="at">package =</span> <span class="st">&quot;SIMplyBee&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="dt">package =</span> <span class="st">&quot;SIMplyBee&quot;</span>)</span></code></pre></div>
+</div>
+<div id="initial-settings" class="section level1">
+<h1>Initial settings</h1>
+<p>We first initiate our simulation with founders genomes, simulation parameters, base population of virgin queens and a drone congregation area (DCA).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co"># Create 20 founder genomes</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>founderGenomes &lt;-<span class="st"> </span><span class="kw">quickHaplo</span>(<span class="dt">nInd =</span> <span class="dv">30</span>, <span class="dt">nChr =</span> <span class="dv">1</span>, <span class="dt">segSites =</span> <span class="dv">100</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="co"># Set up new global simulation parameters</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>SP &lt;-<span class="st"> </span>SimParamBee<span class="op">$</span><span class="kw">new</span>(founderGenomes)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="co"># Create a base population of 20 virgin queens</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>basePop &lt;-<span class="st"> </span><span class="kw">createVirginQueens</span>(founderGenomes)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="co"># Create a DCA from the drones of the first 10 queens</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>DCA &lt;-<span class="st"> </span><span class="kw">createDrones</span>(basePop[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">nInd =</span> <span class="dv">100</span>)</span></code></pre></div>
 </div>
 <div id="creating-a-multicolony-object" class="section level1">
 <h1>Creating a MultiColony object</h1>
 <p>We create a <code>MultiColony</code> object with <code>createMultiColony()</code> function. Let’s say you want to create a <code>MultiColony</code> object that represents a single apiary. The first option is to initialise an empty <code>MultiColony</code> object that represents an empty apiary without any colonies and individuals within them.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an empty apiary</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>emptyApiary <span class="ot">&lt;-</span> <span class="fu">createMultiColony</span>()</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>emptyApiary</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of colonies: 0 </span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are empty: 0 </span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are NULL: 0 </span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have split: 0 </span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have superseded: 0 </span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co"># Create an empty apiary</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>emptyApiary &lt;-<span class="st"> </span><span class="kw">createMultiColony</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>emptyApiary</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="co">#&gt; Number of colonies: 0 </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="co">#&gt; Are empty: 0 </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="co">#&gt; Are NULL: 0 </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="co">#&gt; Have split: 0 </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="co">#&gt; Have superseded: 0 </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
 <p>Let’s inspect the printout of the <code>MultiColony</code> object. This tells how many colonies are within, how many of them are <code>empty</code> and contain no individuals, how many are <code>NULL</code> objects, how many have experienced a split, swarm, supersedure, or a collapse (you can read more about these events in the Colony events vignette), and how many of them are productive, meaning that we can collect a production phenotype from them such as honey yield.</p>
 <p>The second option is again to create an empty <code>MultiColony</code> object that represents an empty apiary without any individuals within, but with a defined number of colony slots.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an empty apiary with 10 colony slots</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>emptyApiary1 <span class="ot">&lt;-</span> <span class="fu">createMultiColony</span>(<span class="at">n =</span> <span class="dv">10</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>emptyApiary1</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of colonies: 10 </span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are empty: 10 </span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are NULL: 10 </span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have split: 0 </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have superseded: 0 </span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
-<p>The third option is to create a <code>MultiColony</code> object with a population of either virgin or mated queens. For this, we first have to initialise the simulation with founder genomes and creating a base population of virgin queens. We will use 10 virgin queens to produce drones and create a DCA.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create 20 founder genomes</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>founderGenomes <span class="ot">&lt;-</span> <span class="fu">quickHaplo</span>(<span class="at">nInd =</span> <span class="dv">30</span>, <span class="at">nChr =</span> <span class="dv">1</span>, <span class="at">segSites =</span> <span class="dv">100</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up new global simulation parameters</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>SP <span class="ot">&lt;-</span> SimParamBee<span class="sc">$</span><span class="fu">new</span>(founderGenomes)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a base population of 20 virgin queens</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>basePop <span class="ot">&lt;-</span> <span class="fu">createVirginQueens</span>(founderGenomes)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a DCA from the drones of the first 10 queens</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>DCA <span class="ot">&lt;-</span> <span class="fu">createDrones</span>(basePop[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], <span class="at">nInd =</span> <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co"># Create an empty apiary with 10 colony slots</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>emptyApiary1 &lt;-<span class="st"> </span><span class="kw">createMultiColony</span>(<span class="dt">n =</span> <span class="dv">10</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>emptyApiary1</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="co">#&gt; Number of colonies: 10 </span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="co">#&gt; Are empty: 10 </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="co">#&gt; Are NULL: 10 </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="co">#&gt; Have split: 0 </span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="co">#&gt; Have superseded: 0 </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
+<p>The third option is to create a <code>MultiColony</code> object with a population of either virgin or mated queens. For this, we first have to initialise the simulation with founder genomes and creating a base population of virgin queens. We will use 10 virgin queens to produce drones and create a DCA - we will take these from the initial settings above.</p>
 <p>We will now create an apiary with 10 virgin colonies with the <code>createMultiColony()</code> function by providing the second set of 10 virgin queens as the input parameter. Let’s call this apiary <code>apiary1</code> and say that it is positioned at the location <code>(1,1)</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an apiary with the remaining virgin queens</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>apiary1 <span class="ot">&lt;-</span> <span class="fu">createMultiColony</span>(<span class="at">x =</span> basePop[<span class="dv">11</span><span class="sc">:</span><span class="dv">20</span>])</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the location of the apiary</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>apiary1 <span class="ot">&lt;-</span> <span class="fu">setLocation</span>(apiary1, <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># Create an apiary with the remaining virgin queens</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>apiary1 &lt;-<span class="st"> </span><span class="kw">createMultiColony</span>(<span class="dt">x =</span> basePop[<span class="dv">11</span><span class="op">:</span><span class="dv">20</span>])</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="co"># Set the location of the apiary</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>apiary1 &lt;-<span class="st"> </span><span class="kw">setLocation</span>(apiary1, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
 <p>Let’s now use functions <code>isQueenPresent()</code> and <code>isVirginQueensPresent()</code> to confirm all the colonies are virgin.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check whether all the colonies are virgin</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">isQueenPresent</span>(apiary1)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     1     2     3     4     5     6     7     8     9    10 </span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">isVirginQueensPresent</span>(apiary1)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    1    2    3    4    5    6    7    8    9   10 </span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co"># Check whether all the colonies are virgin</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="kw">isQueenPresent</span>(apiary1)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="co">#&gt;     1     2     3     4     5     6     7     8     9    10 </span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="co">#&gt; FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="kw">isVirginQueensPresent</span>(apiary1)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="co">#&gt;    1    2    3    4    5    6    7    8    9   10 </span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="co">#&gt; TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span></code></pre></div>
 </div>
 <div id="multicolony-operations" class="section level1">
 <h1>MultiColony operations</h1>
 <p>Once we have a non-empty <code>MultiColony</code> object, we can do basic operations on it. First, we can select some colonies by either specifying their IDs, desired number or percentage of randomly selected colonies.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the IDs of the colonies</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getId</span>(apiary1)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Select colonies according to IDs</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">selectColonies</span>(apiary1, <span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of colonies: 2 </span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are empty: 0 </span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are NULL: 0 </span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have split: 0 </span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have superseded: 0 </span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are productive: 0</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Randomly select a given percentage of colonies</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">selectColonies</span>(apiary1, <span class="at">p =</span> <span class="fl">0.1</span>)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Randomly selecting colonies: 1</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of colonies: 1 </span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are empty: 0 </span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are NULL: 0 </span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have split: 0 </span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have superseded: 0 </span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="co"># Get the IDs of the colonies</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="kw">getId</span>(apiary1)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="co"># Select colonies according to IDs</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="kw">selectColonies</span>(apiary1, <span class="dt">ID =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a><span class="co">#&gt; Number of colonies: 2 </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a><span class="co">#&gt; Are empty: 0 </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a><span class="co">#&gt; Are NULL: 0 </span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a><span class="co">#&gt; Have split: 0 </span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a><span class="co">#&gt; Have superseded: 0 </span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true"></a><span class="co">#&gt; Are productive: 0</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true"></a><span class="co"># Randomly select a given percentage of colonies</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true"></a><span class="kw">selectColonies</span>(apiary1, <span class="dt">p =</span> <span class="fl">0.1</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true"></a><span class="co">#&gt; Randomly selecting colonies: 1</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true"></a><span class="co">#&gt; Number of colonies: 1 </span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true"></a><span class="co">#&gt; Are empty: 0 </span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true"></a><span class="co">#&gt; Are NULL: 0 </span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true"></a><span class="co">#&gt; Have split: 0 </span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true"></a><span class="co">#&gt; Have superseded: 0 </span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
 <p>Second, we can pull some colonies from the <code>MultiColony</code> object. This means, that the pulled colonies are removed from the original object. The function <code>pullColonies()</code> therefore returns two object - the pulled colonies and the remnant colonies.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pull one colony - returns a list with $remnant and $pulled nodes</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pullColonies</span>(apiary1, <span class="at">n =</span> <span class="dv">1</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Randomly pulling colonies: 1</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $pulled</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of colonies: 1 </span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are empty: 0 </span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are NULL: 0 </span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have split: 0 </span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have superseded: 0 </span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are productive: 0 </span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $remnant</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of colonies: 9 </span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are empty: 0 </span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are NULL: 0 </span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have split: 0 </span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have superseded: 0 </span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="co"># Pull one colony - returns a list with $remnant and $pulled nodes</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="kw">pullColonies</span>(apiary1, <span class="dt">n =</span> <span class="dv">1</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="co">#&gt; Randomly pulling colonies: 1</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="co">#&gt; $pulled</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a><span class="co">#&gt; Number of colonies: 1 </span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a><span class="co">#&gt; Are empty: 0 </span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a><span class="co">#&gt; Are NULL: 0 </span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a><span class="co">#&gt; Have split: 0 </span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a><span class="co">#&gt; Have superseded: 0 </span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true"></a><span class="co">#&gt; Are productive: 0 </span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true"></a><span class="co">#&gt; $remnant</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true"></a><span class="co">#&gt; Number of colonies: 9 </span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true"></a><span class="co">#&gt; Are empty: 0 </span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true"></a><span class="co">#&gt; Are NULL: 0 </span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true"></a><span class="co">#&gt; Have split: 0 </span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true"></a><span class="co">#&gt; Have superseded: 0 </span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
 <p>Third, we can also remove some colonies from the <code>MultiColony</code> object with <code>removeColonies()</code> function.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">removeColonies</span>(apiary1, <span class="at">ID =</span> <span class="dv">13</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in removeColonies(apiary1, ID = 13): ID parameter contains come invalid</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; IDs!</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of colonies: 10 </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are empty: 0 </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are NULL: 0 </span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have split: 0 </span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have superseded: 0 </span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">removeColonies</span>(apiary1, <span class="dt">ID =</span> <span class="dv">13</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="co">#&gt; Warning in removeColonies(apiary1, ID = 13): ID parameter contains come invalid</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="co">#&gt; IDs!</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;MultiColony&quot; </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="co">#&gt; Number of colonies: 10 </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a><span class="co">#&gt; Are empty: 0 </span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a><span class="co">#&gt; Are NULL: 0 </span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a><span class="co">#&gt; Have split: 0 </span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a><span class="co">#&gt; Have swarmed: 0 </span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a><span class="co">#&gt; Have superseded: 0 </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a><span class="co">#&gt; Have collapsed: 0 </span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a><span class="co">#&gt; Are productive: 0</span></span></code></pre></div>
 <p>These three functions can also select, pull, and remove colonies based on some values (phenotypes, genetic values …). You can read more about that in the Quantitative genetics vignette.</p>
 </div>
 <div id="crossing-a-multicolony" class="section level1">
 <h1>Crossing a MultiColony</h1>
 <p>Next, we will cross all the virgin queens in the apiary with the <code>cross()</code> function to groups of drones that we collected from the DCA with the <code>pullDroneGroupsFromDCA()</code> function. We have to collect at least as many groups of drones as we have colonies in our <code>MultiColony</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pull 10 groups of drones from the DCA</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>droneGroups <span class="ot">&lt;-</span> <span class="fu">pullDroneGroupsFromDCA</span>(DCA, <span class="at">n =</span> <span class="dv">10</span>, <span class="at">nDrones =</span> nFathersPoisson)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross all virgin queens in the apiary to the selected drones</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>apiary1 <span class="ot">&lt;-</span> <span class="fu">cross</span>(apiary1, <span class="at">drones =</span> droneGroups)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check whether the queens are present (and hence mated)</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">isQueenPresent</span>(apiary1)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    1    2    3    4    5    6    7    8    9   10 </span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="co"># Pull 10 groups of drones from the DCA</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>droneGroups &lt;-<span class="st"> </span><span class="kw">pullDroneGroupsFromDCA</span>(DCA, <span class="dt">n =</span> <span class="dv">10</span>, <span class="dt">nDrones =</span> nFathersPoisson)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="co"># Cross all virgin queens in the apiary to the selected drones</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>apiary1 &lt;-<span class="st"> </span><span class="kw">cross</span>(apiary1, <span class="dt">drones =</span> droneGroups, <span class="dt">checkCross =</span> <span class="st">&quot;warning&quot;</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a><span class="co"># Check whether the queens are present (and hence mated)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a><span class="kw">isQueenPresent</span>(apiary1)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a><span class="co">#&gt;    1    2    3    4    5    6    7    8    9   10 </span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a><span class="co">#&gt; TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span></code></pre></div>
 <p>Once we have mated queens in the apiary, we can apply all the event functions directly to the <code>MultiColony</code> object: <code>buildUp()</code>, <code>downsize()</code>, <code>swarm()</code>, <code>split()</code>, <code>supersede()</code>, <code>collapse()</code> but also all the functions that either add, replace, or remove individuals from the castes. Let’s say we want to build-up all the colonies in our apiary.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build-up all the colonies in the apiary1</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>apiary1 <span class="ot">&lt;-</span> <span class="fu">buildUp</span>(apiary1, <span class="at">nWorkers =</span> <span class="dv">1000</span>, <span class="at">nDrones =</span> <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="co"># Build-up all the colonies in the apiary1</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>apiary1 &lt;-<span class="st"> </span><span class="kw">buildUp</span>(apiary1, <span class="dt">nWorkers =</span> <span class="dv">1000</span>, <span class="dt">nDrones =</span> <span class="dv">100</span>)</span></code></pre></div>
 <p>Furthermore, we can use the <code>pullColonies()</code> or <code>selectColonies()</code> to subset the colonies that will for example swarm, collapse, or supersede (presented in the Colony events vignette), or the ones that we decided to split (check out the Colony events vignette).</p>
 </div>
 <div id="working-with-multiple-multicolony-objects" class="section level1">
 <h1>Working with multiple MultiColony objects</h1>
 <p>Let’s now initiate another <code>MultiColony</code> named as <code>apiary2</code> that is placed at location <code>(2,2)</code>. Here, we define different <code>MultiColony</code> object according to the location of the apiary, but the objects could also be defined according to the age of the queens (such as <code>age0</code>, <code>age1</code>…). <code>apiary2</code> contains only virgin queens and we want to mate them to a DCA made of drones from <code>apiary1</code>.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initiate apiary2 at the location (2,2)</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>apiary2 <span class="ot">&lt;-</span> <span class="fu">createMultiColony</span>(basePop[<span class="dv">21</span><span class="sc">:</span><span class="dv">30</span>])</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>apiary2 <span class="ot">&lt;-</span> <span class="fu">setLocation</span>(apiary2, <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="co"># Initiate apiary2 at the location (2,2)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>apiary2 &lt;-<span class="st"> </span><span class="kw">createMultiColony</span>(basePop[<span class="dv">21</span><span class="op">:</span><span class="dv">30</span>])</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>apiary2 &lt;-<span class="st"> </span><span class="kw">setLocation</span>(apiary2, <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span></code></pre></div>
 <p>Since some time has passed, we want to first replace the drones in <code>apiary1</code> with new drones. We can do that with <code>replaceDrones()</code> function.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>apiary1 <span class="ot">&lt;-</span> <span class="fu">replaceDrones</span>(apiary1)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>apiary1 &lt;-<span class="st"> </span><span class="kw">replaceDrones</span>(apiary1)</span></code></pre></div>
 <p>Now that we have a new set of drones, we can create a DCA with the function <code>createDCA()</code> and mate virgin queens in apiary2 to the DCA.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check whether all colonies in apiary2 are virgin</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">isQueenPresent</span>(apiary2)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    11    12    13    14    15    16    17    18    19    20 </span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">isVirginQueensPresent</span>(apiary2)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   11   12   13   14   15   16   17   18   19   20 </span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a DCA from all the drones in apiary</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>DCA <span class="ot">&lt;-</span> <span class="fu">createDCA</span>(apiary1)</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Check how big is the DCA</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>DCA</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Ploidy: 2 </span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Individuals: 1000 </span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loci: 100 </span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Traits: 0</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample drones groups from the DCA</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>droneGroups <span class="ot">&lt;-</span> <span class="fu">pullDroneGroupsFromDCA</span>(DCA, </span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">n =</span> <span class="fu">nColonies</span>(apiary2), </span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">nDrones =</span> nFathersPoisson)</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Cross virgin queens in apiary2 to selected drones</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>apiary2 <span class="ot">&lt;-</span> <span class="fu">cross</span>(apiary2, <span class="at">drones =</span> droneGroups)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="co"># Check whether all colonies in apiary2 are virgin</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="kw">isQueenPresent</span>(apiary2)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="co">#&gt;    11    12    13    14    15    16    17    18    19    20 </span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="co">#&gt; FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="kw">isVirginQueensPresent</span>(apiary2)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a><span class="co">#&gt;   11   12   13   14   15   16   17   18   19   20 </span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a><span class="co">#&gt; TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a><span class="co"># Create a DCA from all the drones in apiary</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a>DCA &lt;-<span class="st"> </span><span class="kw">createDCA</span>(apiary1)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true"></a><span class="co"># Check how big is the DCA</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true"></a>DCA</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true"></a><span class="co">#&gt; Ploidy: 2 </span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true"></a><span class="co">#&gt; Individuals: 1000 </span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true"></a><span class="co">#&gt; Loci: 100 </span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true"></a><span class="co">#&gt; Traits: 0</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true"></a><span class="co"># Sample drones groups from the DCA</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true"></a>droneGroups &lt;-<span class="st"> </span><span class="kw">pullDroneGroupsFromDCA</span>(DCA, </span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true"></a>                                      <span class="dt">n =</span> <span class="kw">nColonies</span>(apiary2), </span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true"></a>                                      <span class="dt">nDrones =</span> nFathersPoisson)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true"></a><span class="co"># Cross virgin queens in apiary2 to selected drones</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true"></a>apiary2 &lt;-<span class="st"> </span><span class="kw">cross</span>(apiary2, <span class="dt">drones =</span> droneGroups, <span class="dt">checkCross =</span> <span class="st">&quot;warning&quot;</span>)</span></code></pre></div>
 <p>To learn more about the <code>nFathersPoisson()</code> function and other similar functions, read the Sampliong functions vignette.</p>
 </div>
 

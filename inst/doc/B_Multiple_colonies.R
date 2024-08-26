@@ -9,16 +9,6 @@ knitr::opts_chunk$set(
 library(package = "SIMplyBee")
 
 ## -----------------------------------------------------------------------------
-# Create an empty apiary
-emptyApiary <- createMultiColony()
-emptyApiary
-
-## -----------------------------------------------------------------------------
-# Create an empty apiary with 10 colony slots
-emptyApiary1 <- createMultiColony(n = 10)
-emptyApiary1
-
-## -----------------------------------------------------------------------------
 # Create 20 founder genomes
 founderGenomes <- quickHaplo(nInd = 30, nChr = 1, segSites = 100)
 # Set up new global simulation parameters
@@ -27,6 +17,16 @@ SP <- SimParamBee$new(founderGenomes)
 basePop <- createVirginQueens(founderGenomes)
 # Create a DCA from the drones of the first 10 queens
 DCA <- createDrones(basePop[1:10], nInd = 100)
+
+## -----------------------------------------------------------------------------
+# Create an empty apiary
+emptyApiary <- createMultiColony()
+emptyApiary
+
+## -----------------------------------------------------------------------------
+# Create an empty apiary with 10 colony slots
+emptyApiary1 <- createMultiColony(n = 10)
+emptyApiary1
 
 ## -----------------------------------------------------------------------------
 # Create an apiary with the remaining virgin queens
@@ -58,7 +58,7 @@ removeColonies(apiary1, ID = 13)
 # Pull 10 groups of drones from the DCA
 droneGroups <- pullDroneGroupsFromDCA(DCA, n = 10, nDrones = nFathersPoisson)
 # Cross all virgin queens in the apiary to the selected drones
-apiary1 <- cross(apiary1, drones = droneGroups)
+apiary1 <- cross(apiary1, drones = droneGroups, checkCross = "warning")
 # Check whether the queens are present (and hence mated)
 isQueenPresent(apiary1)
 
@@ -87,5 +87,5 @@ droneGroups <- pullDroneGroupsFromDCA(DCA,
                                       n = nColonies(apiary2), 
                                       nDrones = nFathersPoisson)
 # Cross virgin queens in apiary2 to selected drones
-apiary2 <- cross(apiary2, drones = droneGroups)
+apiary2 <- cross(apiary2, drones = droneGroups, checkCross = "warning")
 

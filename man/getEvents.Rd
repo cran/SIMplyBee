@@ -7,11 +7,11 @@
 getEvents(x)
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 }
 \value{
 matrix of logicals, named by colony id when \code{x} is
-  \code{\link{MultiColony-class}}
+  \code{\link[SIMplyBee]{MultiColony-class}}
 }
 \description{
 Level 0 function that returns a matrix of logicals reporting the
@@ -22,6 +22,7 @@ Level 0 function that returns a matrix of logicals reporting the
 \examples{
 founderGenomes <- quickHaplo(nInd = 8, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 drones <- createDrones(x = basePop[1], nInd = 1000)

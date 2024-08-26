@@ -7,7 +7,7 @@
 isNULLColonies(multicolony)
 }
 \arguments{
-\item{multicolony}{\code{\link{MultiColony-class}}}
+\item{multicolony}{\code{\link[SIMplyBee]{MultiColony-class}}}
 }
 \value{
 Named vector of boolean
@@ -18,6 +18,7 @@ Check which of the colonies in a multicolony are NULL
 \examples{
 founderGenomes <- quickHaplo(nInd = 5, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 emptyApiary <- createMultiColony(n = 3)

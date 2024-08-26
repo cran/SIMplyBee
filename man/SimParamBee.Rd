@@ -8,15 +8,15 @@ Container for global honeybee simulation parameters. Saving this
   object as \code{SP} will allow it to be accessed by SIMplyBee functions
   without repeatedly (and annoyingly!) typing out
   \code{someFun(argument, simParamBee = SP)}. \code{SimParamBee} inherits
-  from AlphaSimR \code{\link{SimParam}}, so all \code{\link{SimParam}} slots
+  from AlphaSimR \code{\link[AlphaSimR]{SimParam}}, so all \code{\link[AlphaSimR]{SimParam}} slots
   and functions are available in addition to \code{SimParamBee}-specific
-  slots and functions. Some \code{\link{SimParam}} functions could have
+  slots and functions. Some \code{\link[AlphaSimR]{SimParam}} functions could have
   upgraded behaviour as documented in line with honeybee biology.
 }
 \details{
 This documentation shows details specific to \code{SimParamBee}. We
   suggest you also read all the options provided by the AlphaSimR
-  \code{\link{SimParam}}. Below we show minimal usage cases for each
+  \code{\link[AlphaSimR]{SimParam}}. Below we show minimal usage cases for each
   \code{SimParamBee} function.
 
 See also \code{vignette(package = "SIMplyBee")} for descriptions of how
@@ -30,15 +30,19 @@ See also \code{vignette(package = "SIMplyBee")} for descriptions of how
 
 founderGenomes <- quickHaplo(nInd = 10, nChr = 3, segSites = 10)
 SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 2)
+\dontshow{SP$nThreads = 1L}
 
 # We need enough segregating sites
 try(SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100))
+\dontshow{SP$nThreads = 1L}
 founderGenomes <- quickHaplo(nInd = 10, nChr = 3, segSites = 100)
 SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100)
+\dontshow{SP$nThreads = 1L}
 
 # We can save the csd locus on chromosome 1 or 2, too, for quick simulations
 founderGenomes <- quickHaplo(nInd = 10, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100)
+\dontshow{SP$nThreads = 1L}
 
 ## ------------------------------------------------
 ## Method `SimParamBee$addToCaste`
@@ -46,6 +50,7 @@ SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100)
 
 founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 SP$setTrackPed(isTrackPed = TRUE)
 basePop <- createVirginQueens(founderGenomes)
 
@@ -65,6 +70,7 @@ SP$caste
 
 founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 SP$setTrackPed(isTrackPed = TRUE)
 basePop <- createVirginQueens(founderGenomes)
 SP$pedigree
@@ -80,20 +86,20 @@ SP$caste
 Bovo et al. (2021) Application of Next Generation Semiconductor-Based
   Sequencing for the Identification of Apis mellifera Complementary Sex
   Determiner (csd) Alleles from Honey DNA. Insects, 12(10), 868.
-  \doi{/10.3390/insects12100868}
+  \doi{10.3390/insects12100868}
 
 Lechner et al. (2014) Nucleotide variability at its limit? Insights into
  the number and evolutionary dynamics of the sex-determining specificities
  of the honey bee Apis mellifera Molecular Biology and Evolution, 31,
- 272-287. \doi{/10.1093/molbev/mst207}
+ 272-287. \doi{10.1093/molbev/mst207}
 
 Seeley (2019) The Lives of Bees: The Untold Story of the Honey
   Bee in the Wild. Princeton: Princeton University Press.
-  \doi{/10.1515/9780691189383}
+  \doi{10.1515/9780691189383}
 
 Zareba et al. (2017) Uneven distribution of complementary sex determiner
   (csd) alleles in Apis mellifera population. Scientific Reports, 7, 2317.
-  \doi{/10.1038/s41598-017-02629-9}
+  \doi{10.1038/s41598-017-02629-9}
 }
 \section{Super class}{
 \code{\link[AlphaSimR:SimParam]{AlphaSimR::SimParam}} -> \code{SimParamBee}
@@ -102,8 +108,8 @@ Zareba et al. (2017) Uneven distribution of complementary sex determiner
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{nWorkers}}{numeric or function, a number of workers generated in a
-  colony - used in \code{\link{createWorkers}}, \code{\link{addWorkers}},
-  \code{\link{buildUp}}.
+  colony - used in \code{\link[SIMplyBee]{createWorkers}}, \code{\link[SIMplyBee]{addWorkers}},
+  \code{\link[SIMplyBee]{buildUp}}.
 
   The default value is 100, that is, queen generates 100 workers - this
   is for a down-scaled simulation (for efficiency) assuming that this
@@ -118,14 +124,14 @@ Zareba et al. (2017) Uneven distribution of complementary sex determiner
   argument MUST be \code{colony} and any following arguments MUST have a
   default value.
   For flexibility you can add ... argument to pass on any other argument.
-  See \code{\link{nWorkersPoisson}}, \code{\link{nWorkersTruncPoisson}},
-  or \code{\link{nWorkersColonyPhenotype}} for examples.
+  See \code{\link[SIMplyBee]{nWorkersPoisson}}, \code{\link[SIMplyBee]{nWorkersTruncPoisson}},
+  or \code{\link[SIMplyBee]{nWorkersColonyPhenotype}} for examples.
 
   You can provide your own functions that satisfy your needs!}
 
 \item{\code{nDrones}}{numeric or function, a number of drones generated in a
-  colony - used in \code{\link{createDrones}}, \code{\link{addDrones}},
-  \code{\link{buildUp}}.
+  colony - used in \code{\link[SIMplyBee]{createDrones}}, \code{\link[SIMplyBee]{addDrones}},
+  \code{\link[SIMplyBee]{buildUp}}.
 
   The default value is 100, that is, queen generates 100 drones - this is
   for a down-scaled simulation (for efficiency) assuming that this
@@ -140,14 +146,14 @@ Zareba et al. (2017) Uneven distribution of complementary sex determiner
   argument MUST be \code{x} and any following arguments MUST have a
   default value.
   For flexibility you can add ... argument to pass on any other argument.
-  See \code{\link{nDronesPoisson}}, \code{\link{nDronesTruncPoisson}}, or
-  \code{\link{nDronesColonyPhenotype}} for examples.
+  See \code{\link[SIMplyBee]{nDronesPoisson}}, \code{\link[SIMplyBee]{nDronesTruncPoisson}}, or
+  \code{\link[SIMplyBee]{nDronesColonyPhenotype}} for examples.
 
   You can provide your own functions that satisfy your needs!}
 
 \item{\code{nVirginQueens}}{numeric or function, a number of virgin queens
   generated when a queen dies or other situations - used in
-  \code{\link{createVirginQueens}} and \code{\link{addVirginQueens}}.
+  \code{\link[SIMplyBee]{createVirginQueens}} and \code{\link[SIMplyBee]{addVirginQueens}}.
 
   The default value is 10, that is, when the queen dies, workers generate
   10 new virgin queens (Seeley, 2019). This value is set in
@@ -161,15 +167,15 @@ Zareba et al. (2017) Uneven distribution of complementary sex determiner
   argument MUST be \code{colony} and any following arguments MUST have a
   default value.
   For flexibility you can add ... argument to pass on any other argument.
-  See \code{\link{nVirginQueensPoisson}},
-  \code{\link{nVirginQueensTruncPoisson}}, or
-  \code{\link{nVirginQueensColonyPhenotype}} for examples.
+  See \code{\link[SIMplyBee]{nVirginQueensPoisson}},
+  \code{\link[SIMplyBee]{nVirginQueensTruncPoisson}}, or
+  \code{\link[SIMplyBee]{nVirginQueensColonyPhenotype}} for examples.
 
   You can provide your own functions that satisfy your needs!}
 
 \item{\code{nFathers}}{numeric or function, a number of drones a queen mates
-  with  - used in \code{\link{pullDroneGroupsFromDCA}},
-  \code{\link{cross}}.
+  with  - used in \code{\link[SIMplyBee]{pullDroneGroupsFromDCA}},
+  \code{\link[SIMplyBee]{cross}}.
 
   The default value is 15, that is, a virgin queen mates on average with
   15 drones (Seeley, 2019). This value is set in \code{SimParamBee$new()}
@@ -184,14 +190,14 @@ Zareba et al. (2017) Uneven distribution of complementary sex determiner
   because \code{nFathers} likely does not depend on the colony. Let us
   know if we are wrong!
   For flexibility you can add ... argument to pass on any other argument.
-  See \code{\link{nFathersPoisson}} or
-  \code{\link{nFathersTruncPoisson}} for examples.
+  See \code{\link[SIMplyBee]{nFathersPoisson}} or
+  \code{\link[SIMplyBee]{nFathersTruncPoisson}} for examples.
 
   You can provide your own functions that satisfy your needs!}
 
 \item{\code{swarmP}}{numeric or a function, the swarm proportion - the proportion
   of workers that leave with the old queen when the colony swarms - used
-  in \code{\link{swarm}}.
+  in \code{\link[SIMplyBee]{swarm}}.
 
   The default value is 0.50, that is, about a half of workers leave colony
   in a swarm (Seeley, 2019). This value is set in \code{SimParamBee$new()}
@@ -205,14 +211,23 @@ Zareba et al. (2017) Uneven distribution of complementary sex determiner
   argument MUST be \code{colony} and any following arguments MUST have a
   default value.
   For flexibility you can add ... argument to pass on any other argument.
-  See \code{\link{swarmPUnif}} for
+  See \code{\link[SIMplyBee]{swarmPUnif}} for
   examples.
 
   You can provide your own functions that satisfy your needs!}
 
+\item{\code{swarmRadius}}{numeric, radius within which to sample a location of
+  of the swarm - used in \code{\link[SIMplyBee]{swarm}} - see its \code{radius}
+  argument.
+
+  The default value is \code{0}, that is, swarm gets the same location as
+  the original colony.
+
+  You can change this setting to your needs!}
+
 \item{\code{splitP}}{numeric or a function, the split proportion - the
   proportion of workers removed in a managed split - used in
-  \code{\link{split}}.
+  \code{\link[SIMplyBee]{split}}.
 
   The default value is 0.30, that is, about a third of workers is put into
   a split colony from a strong colony (Seeley, 2019). This value is set
@@ -226,14 +241,14 @@ Zareba et al. (2017) Uneven distribution of complementary sex determiner
   argument MUST be \code{colony} and any following arguments MUST have a
   default value.
   For flexibility you can add ... argument to pass on any other argument.
-  See \code{\link{splitPUnif}} or \code{\link{splitPColonyStrength}} for
+  See \code{\link[SIMplyBee]{splitPUnif}} or \code{\link[SIMplyBee]{splitPColonyStrength}} for
   examples.
 
   You can provide your own functions that satisfy your needs!}
 
 \item{\code{downsizeP}}{numeric or a function, the downsize proportion - the
   proportion of workers removed from the colony when downsizing, usually
-  in autumn - used in \code{\link{downsize}}.
+  in autumn - used in \code{\link[SIMplyBee]{downsize}}.
 
   The default value is 0.85, that is, a majority of workers die before
   autumn or all die but some winter workers are created (Seeley, 2019).
@@ -248,20 +263,20 @@ Zareba et al. (2017) Uneven distribution of complementary sex determiner
   argument MUST be \code{colony} and any following arguments MUST have a
   default value.
   For flexibility you can add ... argument to pass on any other argument.
-  See \code{\link{downsizePUnif}} for example.
+  See \code{\link[SIMplyBee]{downsizePUnif}} for example.
 
   You can provide your own functions that satisfy your needs!}
 
 \item{\code{colonyValueFUN}}{function, to calculate colony values - used
-  in \code{\link{calcColonyValue}} - see also \code{\link{calcColonyPheno}}
-  and \code{\link{calcColonyGv}}.
+  in \code{\link[SIMplyBee]{calcColonyValue}} - see also \code{\link[SIMplyBee]{calcColonyPheno}}
+  and \code{\link[SIMplyBee]{calcColonyGv}}.
 
   This function should work with internals of others functions -
   therefore the function MUST be defined like \code{function(colony, arg
   = default) someCode }, that is, the first argument MUST be
   \code{colony} and any following arguments MUST have a default value.
   For flexibility you can add ... argument to pass on any other argument.
-  See \code{\link{mapCasteToColonyValue}} for an example.
+  See \code{\link[SIMplyBee]{mapCasteToColonyValue}} for an example.
 
   You can provide your own functions that satisfy your needs!}
 }
@@ -271,10 +286,10 @@ Zareba et al. (2017) Uneven distribution of complementary sex determiner
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{caste}}{character, caste information for every individual ever
-created; active only when \code{SP$setTrackPed(isTrackPed = TRUE)}}
+created}
 
 \item{\code{lastColonyId}}{integer, ID of the last Colony object
-created with \code{\link{createColony}}}
+created with \code{\link[SIMplyBee]{createColony}}}
 
 \item{\code{csdChr}}{integer, chromosome of the csd locus}
 
@@ -310,6 +325,7 @@ generate this object}
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="addSnpChip"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-addSnpChip'><code>AlphaSimR::SimParam$addSnpChip()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="addSnpChipByName"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-addSnpChipByName'><code>AlphaSimR::SimParam$addSnpChipByName()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="addStructuredSnpChip"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-addStructuredSnpChip'><code>AlphaSimR::SimParam$addStructuredSnpChip()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="addToPed"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-addToPed'><code>AlphaSimR::SimParam$addToPed()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="addToRec"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-addToRec'><code>AlphaSimR::SimParam$addToRec()</code></a></span></li>
@@ -321,6 +337,7 @@ generate this object}
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="addTraitAE"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-addTraitAE'><code>AlphaSimR::SimParam$addTraitAE()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="addTraitAEG"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-addTraitAEG'><code>AlphaSimR::SimParam$addTraitAEG()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="addTraitAG"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-addTraitAG'><code>AlphaSimR::SimParam$addTraitAG()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="altAddTraitAD"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-altAddTraitAD'><code>AlphaSimR::SimParam$altAddTraitAD()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="ibdHaplo"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-ibdHaplo'><code>AlphaSimR::SimParam$ibdHaplo()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="importTrait"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-importTrait'><code>AlphaSimR::SimParam$importTrait()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="manAddTrait"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-manAddTrait'><code>AlphaSimR::SimParam$manAddTrait()</code></a></span></li>
@@ -329,6 +346,7 @@ generate this object}
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="resetPed"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-resetPed'><code>AlphaSimR::SimParam$resetPed()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="restrSegSites"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-restrSegSites'><code>AlphaSimR::SimParam$restrSegSites()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="setCorE"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-setCorE'><code>AlphaSimR::SimParam$setCorE()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="setFounderHap"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-setFounderHap'><code>AlphaSimR::SimParam$setFounderHap()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="setRecombRatio"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-setRecombRatio'><code>AlphaSimR::SimParam$setRecombRatio()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="setSexes"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-setSexes'><code>AlphaSimR::SimParam$setSexes()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="AlphaSimR" data-topic="SimParam" data-id="setTrackPed"><a href='../../AlphaSimR/html/SimParam.html#method-SimParam-setTrackPed'><code>AlphaSimR::SimParam$setTrackPed()</code></a></span></li>
@@ -357,6 +375,7 @@ Starts the process of building a new simulation by creating
   nVirginQueens = 10,
   nFathers = 15,
   swarmP = 0.5,
+  swarmRadius = 0,
   splitP = 0.3,
   downsizeP = 0.85,
   csdChr = 3,
@@ -369,22 +388,24 @@ Starts the process of building a new simulation by creating
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{founderPop}}{\code{\link{MapPop-class}}, founder population of
+\item{\code{founderPop}}{\code{\link[AlphaSimR]{MapPop-class}}, founder population of
 genomes}
 
-\item{\code{nWorkers}}{see \code{\link{SimParamBee}} field \code{nWorkers}}
+\item{\code{nWorkers}}{see \code{\link[SIMplyBee]{SimParamBee}} field \code{nWorkers}}
 
-\item{\code{nDrones}}{see \code{\link{SimParamBee}} field \code{nDrones}}
+\item{\code{nDrones}}{see \code{\link[SIMplyBee]{SimParamBee}} field \code{nDrones}}
 
-\item{\code{nVirginQueens}}{see \code{\link{SimParamBee}} field \code{nVirginQueens}}
+\item{\code{nVirginQueens}}{see \code{\link[SIMplyBee]{SimParamBee}} field \code{nVirginQueens}}
 
-\item{\code{nFathers}}{see \code{\link{SimParamBee}} field \code{nFathers}}
+\item{\code{nFathers}}{see \code{\link[SIMplyBee]{SimParamBee}} field \code{nFathers}}
 
-\item{\code{swarmP}}{see \code{\link{SimParamBee}} field \code{swarmP}}
+\item{\code{swarmP}}{see \code{\link[SIMplyBee]{SimParamBee}} field \code{swarmP}}
 
-\item{\code{splitP}}{see \code{\link{SimParamBee}} field \code{splitP}}
+\item{\code{swarmRadius}}{see \code{\link[SIMplyBee]{SimParamBee}} field \code{swarmRadius}}
 
-\item{\code{downsizeP}}{see \code{\link{SimParamBee}} field \code{downsizeP}}
+\item{\code{splitP}}{see \code{\link[SIMplyBee]{SimParamBee}} field \code{splitP}}
+
+\item{\code{downsizeP}}{see \code{\link[SIMplyBee]{SimParamBee}} field \code{downsizeP}}
 
 \item{\code{csdChr}}{integer, chromosome that will carry the csd locus, by
 default 3, but if there are less chromosomes (for a simplified
@@ -403,7 +424,7 @@ then \code{csdChr=NULL} is triggered. By default we set \code{nCsdAlleles}
 to 128, which is at the upper end of the reported number of csd alleles
 (Lechner et al., 2014; Zareba et al., 2017; Bovo et al., 2021).}
 
-\item{\code{colonyValueFUN}}{see \code{\link{SimParamBee}} field \code{colonyValueFUN}}
+\item{\code{colonyValueFUN}}{see \code{\link[SIMplyBee]{SimParamBee}} field \code{colonyValueFUN}}
 }
 \if{html}{\out{</div>}}
 }
@@ -411,15 +432,19 @@ to 128, which is at the upper end of the reported number of csd alleles
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{founderGenomes <- quickHaplo(nInd = 10, nChr = 3, segSites = 10)
 SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 2)
+\dontshow{SP$nThreads = 1L}
 
 # We need enough segregating sites
 try(SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100))
+\dontshow{SP$nThreads = 1L}
 founderGenomes <- quickHaplo(nInd = 10, nChr = 3, segSites = 100)
 SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100)
+\dontshow{SP$nThreads = 1L}
 
 # We can save the csd locus on chromosome 1 or 2, too, for quick simulations
 founderGenomes <- quickHaplo(nInd = 10, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes, nCsdAlleles = 100)
+\dontshow{SP$nThreads = 1L}
 }
 \if{html}{\out{</div>}}
 
@@ -449,6 +474,7 @@ drones, "V" for virgin queens, and "F" for fathers}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 SP$setTrackPed(isTrackPed = TRUE)
 basePop <- createVirginQueens(founderGenomes)
 
@@ -490,6 +516,7 @@ drones, "V" for virgin queens, and "F" for fathers}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 SP$setTrackPed(isTrackPed = TRUE)
 basePop <- createVirginQueens(founderGenomes)
 SP$pedigree

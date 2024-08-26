@@ -5,12 +5,16 @@ knitr::opts_chunk$set(
   include = TRUE
 )
 
+## ----crossing_decision_tree, echo=FALSE, out.width='90%', fig.cap = "Crossing decision tree"----
+knitr::include_graphics("decisionTreeCrossing.png")
+
 ## -----------------------------------------------------------------------------
 library(package = "SIMplyBee")
+library(package = "ggplot2")
 
 ## -----------------------------------------------------------------------------
 # Simulate 40 founder genomes
-founderGenomes <- quickHaplo(nInd = 50, nChr = 1, segSites = 100)
+founderGenomes <- quickHaplo(nInd = 60, nChr = 1, segSites = 100)
 # Set global population paramaters
 SP <- SimParamBee$new(founderGenomes)
 # Create a base population of 40 virgin queens
@@ -18,26 +22,28 @@ basePop <- createVirginQueens(founderGenomes)
 
 # Prepare populations with a single virgin queen
 virginQueen1 <- basePop[1]
-virginQueen2 <- basePop[2]
-virginQueen3 <- basePop[3]
 # Prepare populations with multiple virgin queens
-virginQueens1 <- basePop[4:6]
-virginQueens2 <- basePop[7:9]
-virginQueens3 <- basePop[10:12]
-# Prepare virgin Colony objects
-colony1 <- createColony(basePop[13])
-colony2 <- createColony(basePop[14])
-colony3 <- createColony(basePop[15])
-colony4 <- createColony(basePop[16])
+virginQueens1 <- basePop[2:4]
 # Prepare virgin MultiColony objects
-apiary1 <- createMultiColony(basePop[17:21])
-apiary2 <- createMultiColony(basePop[22:26])
-apiary3 <- createMultiColony(basePop[27:31])
-apiary4 <- createMultiColony(basePop[32:41])
+beekeeper1 <- createMultiColony(basePop[6:11])
+beekeeper2 <- createMultiColony(basePop[12:16])
+beekeeper3 <- createMultiColony(basePop[17:21])
+beekeeper4 <- createMultiColony(basePop[22:31])
+beekeeper5 <- createMultiColony(basePop[32:40])
+beekeeper6 <- createMultiColony(basePop[41:50]) 
+beekeeper7 <- createMultiColony(basePop[51:60]) 
 
 ## -----------------------------------------------------------------------------
 # Create a DCA from the remaining virgin queens
 DCA <- createDrones(basePop[42:50], nInd = 1000)
+
+## -----------------------------------------------------------------------------
+# Samples some drone for mating from the DCA
+drones <- selectInd(DCA, nInd = 10, use = "rand")
+# Mate the virgin queen with the drones
+queen1 <- cross(x = virginQueen1, drones = drones, checkCross = "warning")
+# Check the number of fathers for the queen
+nFathers(queen1)
 
 ## -----------------------------------------------------------------------------
 # Pre-select drone (father) populations from a DCA
@@ -47,90 +53,124 @@ droneGroups <- pullDroneGroupsFromDCA(DCA, n = 20, nDrones = nFathersTruncPoisso
 sapply(droneGroups, FUN = nInd)
 
 ## -----------------------------------------------------------------------------
-# A single virgin queen
-virginQueen1 <- cross(virginQueen1, drones = droneGroups[[1]])
-nFathers(virginQueen1)
+# Pop-class with multiple queens
+queens1 <- cross(x = virginQueens1, drones = droneGroups[1:3], checkCross = "warning")
+nFathers(queens1)
 
 ## -----------------------------------------------------------------------------
-# Multiple virgin queens
-virginQueens1 <- cross(virginQueens1, drones = droneGroups[2:4])
-nFathers(virginQueens1)
+# MultiColony-class
+beekeeper1 <- cross(x = beekeeper1, drones = droneGroups[4:9], checkCross = "warning")
+nFathers(beekeeper1)
 
 ## -----------------------------------------------------------------------------
-# A colony
-colony1 <- cross(colony1, drones = droneGroups[[5]])
-nFathers(colony1)
+crossPlan1 <- createCrossPlan(x = beekeeper2,
+                              drones = DCA,
+                              nDrones = nFathersPoisson)
+# Inspect the cross plan
+crossPlan1
+sapply(crossPlan1, length)
 
 ## -----------------------------------------------------------------------------
-# An apiary
-apiary1 <- cross(x = apiary1, drones = droneGroups[6:10])
-nFathers(apiary1)
+# Cross the colonies of the beekeeper 2
+beekeeper2 <- cross(x = beekeeper2, drones = DCA, crossPlan = crossPlan1, checkCross = "warning")
+nFathers(beekeeper2)
 
 ## -----------------------------------------------------------------------------
-# Create a combined cross for mating a single queen (virginQueen2) and a population
-# of virgin queen (virginQueens2)
-(crossPlanQueens <- createRandomCrossPlan(IDs = c(getId(virginQueen2),
-                                                  getId(virginQueens2)),
-                                         drones = DCA,
-                                         nDrones = 15))
+# Set location to apiaries
+beekeeper1 <-  setLocation(beekeeper1, 
+                           location = Map(c, runif(nColonies(beekeeper1), 0, 2*pi), runif(nColonies(beekeeper1), 0, 2*pi)))
+beekeeper2 <-  setLocation(beekeeper2, 
+                           location = Map(c, runif(nColonies(beekeeper2), 0, 2*pi), runif(nColonies(beekeeper2), 0, 2*pi)))
+beekeeper3 <-  setLocation(beekeeper3, 
+                           location = Map(c, runif(nColonies(beekeeper2), 0, 2*pi), runif(nColonies(beekeeper3), 0, 2*pi)))
+
 
 ## -----------------------------------------------------------------------------
-# Cross a single virgin queen
-virginQueen2 <- cross(virginQueen2, drones = DCA, crossPlan = crossPlanQueens)
-nFathers(virginQueen2)
-# Cross multiple virgin queens
-virginQueens2 <- cross(virginQueens2, drones = DCA, crossPlan = crossPlanQueens)
-nFathers(virginQueens2)
+locationsDF <- data.frame(Location = getLocation(c(beekeeper1, beekeeper2, beekeeper3), collapse = TRUE),
+                          Beekeeper = c(rep("Beekeeper1", nColonies(beekeeper1)),
+                                        rep("Beekeeper2", nColonies(beekeeper2)),
+                                        rep("Beekeeper3", nColonies(beekeeper3))))
+
+ggplot(data = locationsDF, aes(x = Location.1, y = Location.2, colour = Beekeeper)) + 
+  geom_point()
 
 ## -----------------------------------------------------------------------------
-(crossPlanColonies <- createRandomCrossPlan(IDs = c(getId(colony2), getId(apiary2)),
-                                           drones = DCA,
-                                           nDrones = nFathersPoisson))
+crossPlan2 <- createCrossPlan(x = beekeeper3,
+                              droneColonies = c(beekeeper1, beekeeper2),
+                              spatial = TRUE,
+                              radius = 3,
+                              nDrones = 13)
+# Inspect the cross plan
+crossPlan2
+sapply(crossPlan2, length)
 
 ## -----------------------------------------------------------------------------
-# Cross a single colony
-colony2 <- cross(colony2, drones = DCA, crossPlan = crossPlanColonies)
-nFathers(colony2)
-# Cross an apiary
-apiary2 <- cross(x = apiary2, drones = DCA, crossPlan = crossPlanColonies)
-nFathers(apiary2)
+beekeeper3 <- cross(x = beekeeper3, 
+                    crossPlan = crossPlan2,
+                    droneColonies = c(beekeeper1, beekeeper2),
+                    nDrones = 13,
+                    checkCross = "warning")
+# Inspect the number of fathers
+nFathers(beekeeper3)
+
+## -----------------------------------------------------------------------------
+beekeeper4 <-  setLocation(beekeeper4, 
+                           location = Map(c, runif(nColonies(beekeeper4), 0, 2*pi), runif(nColonies(beekeeper4), 0, 2*pi)))
+beekeeper5 <-  setLocation(beekeeper5, 
+                           location = Map(c, runif(nColonies(beekeeper5), 0, 2*pi), runif(nColonies(beekeeper5), 0, 2*pi)))
+
+## -----------------------------------------------------------------------------
+beekeeper4 <- cross(x = beekeeper4,
+                    droneColonies = c(beekeeper1, beekeeper2, beekeeper3),
+                    crossPlan = "create",
+                    spatial = FALSE,
+                    nDrones = 12,
+                    checkCross = "warning")
+nFathers(beekeeper4)
+
+beekeeper5 <- cross(x = beekeeper5,
+                    droneColonies = c(beekeeper1, beekeeper2, beekeeper3),
+                    crossPlan = "create",
+                    spatial = TRUE,
+                    radius = 3,
+                    nDrones = 12,
+                    checkCross = "warning")
+nFathers(beekeeper5)
 
 ## -----------------------------------------------------------------------------
 # Create a DCA at a mating station from colony1
-(matingStationDCA <- createMatingStationDCA(colony1, nDPQs = 20, nDronePerDPQ = 1000))
+(matingStationDCA <- createMatingStationDCA(beekeeper1[[3]], nDPQs = 20, nDronePerDPQ = 1000))
 
 ## -----------------------------------------------------------------------------
-# Mate only an apiary
-crossPlanMatingStation <- createRandomCrossPlan(IDs = c(getId(colony3), 
-                                                        getId(apiary3)),
-                                                drones = matingStationDCA,
-                                                nDrones = nFathersTruncPoisson)
-# Cross a colony
-colony3 <- cross(colony3, crossPlan = crossPlanMatingStation, drones = matingStationDCA)
-nFathers(colony3)
-# Cross an apiary
-apiary3 <- cross(apiary3, crossPlan = crossPlanMatingStation, drones = matingStationDCA)
-nFathers(apiary3)
+# Mate only an beekeeper
+beekeeper6 <- cross(beekeeper6,
+                    drones = matingStationDCA,
+                    spatial = FALSE,
+                    crossPlan = "create",
+                    nDrones = 15,
+                    checkCross = "warning")
+nFathers(beekeeper6)
 
 ## -----------------------------------------------------------------------------
 # Create a single drone for single drone insemination
-singleDrone = createDrones(colony2, nInd = 1)
+singleDrone = createDrones(beekeeper1[[1]], nInd = 1)
 # Create a cross plan for crossing some of the colonies in an open DCA, 
 # some with single drone, and some on a mating station
-crossPlanApiary4 <- c(
-  createRandomCrossPlan(IDs = getId(apiary4)[1], 
-                        drones = singleDrone, 
-                        nDrones = 1),
-  createRandomCrossPlan(IDs = getId(apiary4)[2:6], 
-                        drones = DCA, 
-                        nDrones = nFathersTruncPoisson),
-  createRandomCrossPlan(IDs = getId(apiary4)[7:10], 
-                        drones = matingStationDCA, 
-                        nDrones = nFathersTruncPoisson)
+crossPlanBeekeeper7 <- c(
+  createCrossPlan(x = beekeeper7[1], 
+                  drones = singleDrone, 
+                  nDrones = 1),
+  createCrossPlan(x = beekeeper7[2:6], 
+                  drones = DCA, 
+                  nDrones = nFathersTruncPoisson),
+  createCrossPlan(x = beekeeper7[7:10], 
+                  drones = matingStationDCA, 
+                  nDrones = nFathersTruncPoisson)
   )
 
-apiary4 <- cross(apiary4, 
-                 crossPlan = crossPlanApiary4, 
-                 drones = c(singleDrone, DCA, matingStationDCA))
-nFathers(apiary4)
+beekeeper7 <- cross(x = beekeeper7, 
+                    crossPlan = crossPlanBeekeeper7, 
+                    drones = c(singleDrone, DCA, matingStationDCA),
+                    checkCross = "warning")
+nFathers(beekeeper7)
 

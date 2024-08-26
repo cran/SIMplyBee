@@ -7,10 +7,10 @@
 collapse(x)
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 }
 \value{
-\code{\link{Colony-class}} or \code{\link{MultiColony-class}} with the collapse
+\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}} with the collapse
   event set to \code{TRUE}
 }
 \description{
@@ -28,6 +28,7 @@ You should use this function in an edge-case when you
 \examples{
 founderGenomes <- quickHaplo(nInd = 10, nChr = 1, segSites = 50)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 drones <- createDrones(basePop[1], n = 1000)
 droneGroups <- pullDroneGroupsFromDCA(drones, n = 10, nDrones = 10)

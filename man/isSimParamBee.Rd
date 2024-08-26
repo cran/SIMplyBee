@@ -7,16 +7,17 @@
 isSimParamBee(x)
 }
 \arguments{
-\item{x}{\code{\link{SimParamBee}}}
+\item{x}{\code{\link[SIMplyBee]{SimParamBee}}}
 }
 \value{
 logical
 }
 \description{
-Test if x is a \code{\link{SimParamBee}} class object
+Test if x is a \code{\link[SIMplyBee]{SimParamBee}} class object
 }
 \examples{
 founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 isSimParamBee(SP)
 }

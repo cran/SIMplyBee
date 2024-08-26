@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2022-12-14" />
+<meta name="date" content="2024-08-26" />
 
 <title>Frequently asked questions</title>
 
@@ -25,6 +25,22 @@ document.addEventListener('DOMContentLoaded', function(e) {
     if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
     a = h.attributes;
     while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
   }
 });
 </script>
@@ -338,95 +354,93 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">Frequently asked questions</h1>
-<h4 class="date">2022-12-14</h4>
+<h4 class="date">2024-08-26</h4>
 
 
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>This document collates other important points not mentioned in previous vignettes or similar frequently asked questions. We will demonstrate some of the questions and answers with the R code so we load the package:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="at">package =</span> <span class="st">&quot;SIMplyBee&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="dt">package =</span> <span class="st">&quot;SIMplyBee&quot;</span>)</span></code></pre></div>
 </div>
 <div id="why-arent-drones-removed-from-colonies-when-creating-a-dca" class="section level1">
 <h1>Why aren’t drones removed from colonies when creating a DCA?</h1>
 <p>In SIMplyBee, when we modify an object, we return it following R’s functional style of programming. However, we do not by default return drone-donor colonies when we sample the drones for mating and crossing the virgin queens. A virgin queen can mate with several drones, say from <span class="math inline">\(n\)</span> colonies. These drones die during mating. To reflect this reality, the drone sampling or the crossing function should return <span class="math inline">\(n\)</span> updated colonies with the drones removed, which could be cumbersome. To provide simple code, we by default only get a copy of drones from colonies and change their caste from drones to fathers, which marks them as mated and dead. This means they can’t be used anymore as drones anymore, but remain in the colony.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initiate simulation</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>founderGenomes <span class="ot">&lt;-</span> <span class="fu">quickHaplo</span>(<span class="at">nInd =</span> <span class="dv">3</span>, <span class="at">nChr =</span> <span class="dv">1</span>, <span class="at">segSites =</span> <span class="dv">10</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>SP <span class="ot">&lt;-</span> SimParamBee<span class="sc">$</span><span class="fu">new</span>(founderGenomes, <span class="at">csdChr =</span> <span class="cn">NULL</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Base virgin queens</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>baseVirginQueen <span class="ot">&lt;-</span> <span class="fu">createVirginQueens</span>(founderGenomes)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Base drones</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>baseDrones <span class="ot">&lt;-</span> <span class="fu">createDrones</span>(baseVirginQueen[<span class="dv">1</span>])</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># A colony</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>colony <span class="ot">&lt;-</span> <span class="fu">createColony</span>(baseVirginQueen[<span class="dv">2</span>])</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>colony <span class="ot">&lt;-</span> <span class="fu">cross</span>(colony, baseDrones)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>colony <span class="ot">&lt;-</span> <span class="fu">addDrones</span>(colony, <span class="at">nInd =</span> <span class="dv">100</span>)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>colony</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;Colony&quot; </span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Id: 1 </span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Location: </span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Queen: 2 </span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of fathers: 100 </span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of workers: 0 </span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of drones: 100 </span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of virgin queens: 0 </span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Has split: FALSE </span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Has swarmed: FALSE </span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Has superseded: FALSE </span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Has collapsed: FALSE </span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Is productive: FALSE</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Crossing one of the remaining virgin queens with drones from the </span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>DCA <span class="ot">&lt;-</span> <span class="fu">createDCA</span>(colony, <span class="at">nInd =</span> <span class="dv">50</span>)</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>DCA</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Ploidy: 2 </span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Individuals: 50 </span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loci: 10 </span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Traits: 0</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>queen <span class="ot">&lt;-</span> <span class="fu">cross</span>(baseVirginQueen[<span class="dv">3</span>], DCA)</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>queen</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Ploidy: 2 </span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Individuals: 1 </span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loci: 10 </span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Traits: 0</span></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="fu">getFathers</span>(queen)</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Ploidy: 2 </span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Individuals: 50 </span></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loci: 10 </span></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Traits: 0</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that we did not by default remove drones from the colony when we </span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="co"># created the DCA, but these drones now have a caste changed to fathers, so</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="co"># they are not available anymore for further mating</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>colony<span class="sc">@</span>drones <span class="co"># 100 drones</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Ploidy: 2 </span></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Individuals: 100 </span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loci: 10 </span></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Traits: 0</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">getCaste</span>(colony<span class="sc">@</span>drones)) <span class="co"># 50 drones 50 fathers</span></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  drones fathers </span></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      50      50</span></span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="fu">getDrones</span>(colony) <span class="co"># 50 drones</span></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in getCastePop(x, caste = &quot;drones&quot;, nInd = nInd, use = use,</span></span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; removeFathers = removeFathers, : Taking only drones that have not yet mated!</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Ploidy: 2 </span></span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Individuals: 50 </span></span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loci: 10 </span></span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Traits: 0</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co"># Initiate simulation</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>founderGenomes &lt;-<span class="st"> </span><span class="kw">quickHaplo</span>(<span class="dt">nInd =</span> <span class="dv">3</span>, <span class="dt">nChr =</span> <span class="dv">1</span>, <span class="dt">segSites =</span> <span class="dv">10</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>SP &lt;-<span class="st"> </span>SimParamBee<span class="op">$</span><span class="kw">new</span>(founderGenomes, <span class="dt">csdChr =</span> <span class="ot">NULL</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="co"># Base virgin queens</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>baseVirginQueen &lt;-<span class="st"> </span><span class="kw">createVirginQueens</span>(founderGenomes)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="co"># Base drones</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>baseDrones &lt;-<span class="st"> </span><span class="kw">createDrones</span>(baseVirginQueen[<span class="dv">1</span>])</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a><span class="co"># A colony</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>colony &lt;-<span class="st"> </span><span class="kw">createColony</span>(baseVirginQueen[<span class="dv">2</span>])</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>colony &lt;-<span class="st"> </span><span class="kw">cross</span>(<span class="dt">x =</span> colony, <span class="dt">crossPlan =</span> <span class="st">&quot;create&quot;</span>, <span class="dt">drones =</span> baseDrones, <span class="dt">checkCross =</span> <span class="st">&quot;warning&quot;</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a>colony &lt;-<span class="st"> </span><span class="kw">addDrones</span>(colony, <span class="dt">nInd =</span> <span class="dv">100</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>colony</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;Colony&quot; </span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a><span class="co">#&gt; Id: 1 </span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a><span class="co">#&gt; Location: 0 0 </span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a><span class="co">#&gt; Queen: 2 </span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true"></a><span class="co">#&gt; Number of fathers: 15 </span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true"></a><span class="co">#&gt; Number of workers: 0 </span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true"></a><span class="co">#&gt; Number of drones: 100 </span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true"></a><span class="co">#&gt; Number of virgin queens: 0 </span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true"></a><span class="co">#&gt; Has split: FALSE </span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true"></a><span class="co">#&gt; Has swarmed: FALSE </span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true"></a><span class="co">#&gt; Has superseded: FALSE </span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true"></a><span class="co">#&gt; Has collapsed: FALSE </span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true"></a><span class="co">#&gt; Is productive: FALSE</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true"></a><span class="co"># Crossing one of the remaining virgin queens with drones from the </span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true"></a>DCA &lt;-<span class="st"> </span><span class="kw">createDCA</span>(colony, <span class="dt">nInd =</span> <span class="dv">50</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true"></a>DCA</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true"></a><span class="co">#&gt; Ploidy: 2 </span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true"></a><span class="co">#&gt; Individuals: 50 </span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true"></a><span class="co">#&gt; Loci: 10 </span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true"></a><span class="co">#&gt; Traits: 0</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true"></a>queen &lt;-<span class="st"> </span><span class="kw">cross</span>(<span class="dt">x =</span> baseVirginQueen[<span class="dv">3</span>], <span class="dt">crossPlan =</span> <span class="st">&quot;create&quot;</span>, <span class="dt">drones =</span> DCA, <span class="dt">checkCross =</span> <span class="st">&quot;warning&quot;</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true"></a>queen</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true"></a><span class="co">#&gt; Ploidy: 2 </span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true"></a><span class="co">#&gt; Individuals: 1 </span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true"></a><span class="co">#&gt; Loci: 10 </span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true"></a><span class="co">#&gt; Traits: 0</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true"></a><span class="kw">getFathers</span>(queen)</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true"></a><span class="co">#&gt; Ploidy: 2 </span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true"></a><span class="co">#&gt; Individuals: 15 </span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true"></a><span class="co">#&gt; Loci: 10 </span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true"></a><span class="co">#&gt; Traits: 0</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true"></a><span class="co"># Note that we did not by default remove drones from the colony when we </span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true"></a><span class="co"># created the DCA, but these drones now have a caste changed to fathers, so</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true"></a><span class="co"># they are not available anymore for further mating</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true"></a>colony<span class="op">@</span>drones <span class="co"># 100 drones</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true"></a><span class="co">#&gt; Ploidy: 2 </span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true"></a><span class="co">#&gt; Individuals: 100 </span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true"></a><span class="co">#&gt; Loci: 10 </span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true"></a><span class="co">#&gt; Traits: 0</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true"></a><span class="kw">table</span>(<span class="kw">getCaste</span>(colony<span class="op">@</span>drones)) <span class="co"># 50 drones 50 fathers</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true"></a><span class="co">#&gt;  drones fathers </span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true"></a><span class="co">#&gt;      85      15</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true"></a><span class="kw">getDrones</span>(colony) <span class="co"># 50 drones</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;Pop&quot; </span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true"></a><span class="co">#&gt; Ploidy: 2 </span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true"></a><span class="co">#&gt; Individuals: 85 </span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true"></a><span class="co">#&gt; Chromosomes: 1 </span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true"></a><span class="co">#&gt; Loci: 10 </span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true"></a><span class="co">#&gt; Traits: 0</span></span></code></pre></div>
 </div>
 
 

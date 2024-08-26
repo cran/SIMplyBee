@@ -7,7 +7,7 @@
 resetEvents(x, collapse = NULL)
 }
 \arguments{
-\item{x}{\code{\link{Colony-class}} or \code{\link{MultiColony-class}}}
+\item{x}{\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}}}
 
 \item{collapse}{logical, reset the collapse event (only sensible in setting
 up a new colony, which the default of \code{NULL} caters for; otherwise, a
@@ -15,7 +15,7 @@ collapsed colony should be left collapsed forever, unless you force
 resetting this event with \code{collapse = TRUE})}
 }
 \value{
-\code{\link{Colony-class}} or \code{\link{MultiColony-class}} with
+\code{\link[SIMplyBee]{Colony-class}} or \code{\link[SIMplyBee]{MultiColony-class}} with
   events reset
 }
 \description{
@@ -27,6 +27,7 @@ Level 2 function that resets the slots swarm, split,
 \examples{
 founderGenomes <- quickHaplo(nInd = 5, nChr = 1, segSites = 50)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 
 drones <- createDrones(x = basePop[1], nInd = 100)

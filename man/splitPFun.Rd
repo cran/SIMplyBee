@@ -11,7 +11,7 @@ splitPUnif(colony, n = 1, min = 0.2, max = 0.4)
 splitPColonyStrength(colony, n = 1, nWorkersFull = 100, scale = 1)
 }
 \arguments{
-\item{colony}{\code{\link{Colony-class}}}
+\item{colony}{\code{\link[SIMplyBee]{Colony-class}}}
 
 \item{n}{integer, number of samples}
 
@@ -33,7 +33,7 @@ numeric, split proportion
 \description{
 Sample the split proportion - proportion of removed workers in a
   managed split - used when \code{p = NULL} - (see
-  \code{\link{SimParamBee}$splitP}).
+  \code{\link[SIMplyBee]{SimParamBee}$splitP}).
 
   This is just an example. You can provide your own functions that satisfy
   your needs!
@@ -68,6 +68,7 @@ hist(p, breaks = seq(from = 0, to = 1, by = 0.01), xlim = c(0, 1))
 # Example for splitPColonyStrength()
 founderGenomes <- quickHaplo(nInd = 2, nChr = 1, segSites = 100)
 SP <- SimParamBee$new(founderGenomes)
+\dontshow{SP$nThreads = 1L}
 basePop <- createVirginQueens(founderGenomes)
 drones <- createDrones(x = basePop[1], nInd = 15)
 colony <- createColony(x = basePop[2])
@@ -96,5 +97,5 @@ plot(pKeep ~ nWorkers, ylim = c(0, 1))
 abline(v = nWorkersFull)
 }
 \seealso{
-\code{\link{SimParamBee}} field \code{splitP}
+\code{\link[SIMplyBee]{SimParamBee}} field \code{splitP}
 }
