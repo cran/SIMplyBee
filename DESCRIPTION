@@ -2,7 +2,7 @@ Package: SIMplyBee
 Type: Package
 Title: 'AlphaSimR' Extension for Simulating Honeybee Populations and
         Breeding Programmes
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: c(
   person("Jana", "Obšteter", email = "obsteter.jana@gmail.com",
   role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1511-3916")),
@@ -36,11 +36,11 @@ Config/testthat/edition: 3
 Config/Needs/website: tidyverse/tidytemplate
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2024-08-26 06:52:54 UTC; janao
+Packaged: 2024-09-19 05:38:48 UTC; janao
 Author: Jana Obšteter [aut, cre] (<https://orcid.org/0000-0003-1511-3916>),
   Laura Strachan [aut] (<https://orcid.org/0000-0002-2569-0250>),
   Jernej Bubnič [aut] (<https://orcid.org/0000-0003-1362-3736>),
   Gregor Gorjanc [aut] (<https://orcid.org/0000-0001-8008-2787>)
 Maintainer: Jana Obšteter <obsteter.jana@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-08-26 07:30:05 UTC
+Date/Publication: 2024-09-20 12:30:02 UTC

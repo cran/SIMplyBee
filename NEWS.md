@@ -4,6 +4,17 @@ editor_options:
     wrap: 72
 ---
 
+# SIMplyBee version 0.4.1
+
+-   2024-09-19
+
+## Bug fixes
+
+-   locations of the colonies in the D_Crossing vignettes were previously
+sampled by random. This caused that on some runs some queens were left unmated,
+which caused an error. We now read in the locations from a csv file.
+
+
 # SIMplyBee version 0.4.0
 
 -   2024-08-23
@@ -14,11 +25,10 @@ editor_options:
     argument anymore; use setLocation() instead; by default, location is
     now c(0, 0) PR#500
 
-## New features
 
+## New features ##
 -   In setLocation(MultiColony) we can set one location (numeric) or
     multiple (list or data.frame) PR#500
-
 -   getLocation(MultiColony) got the collapse argument
     Commit#f4e629c3e8920948ad576eae3615a86b26300790
 
@@ -40,7 +50,7 @@ editor_options:
     
 -  Unified setMisc and getMisc behaviour to comply with the new AlphaSimR behaviour
 
--  Added new C++ function isHeterozygous() to speed up the SIMplyBee function isCsdHeterozygous()
+-  Added new C++ function isHeterozygous() to speed up the SIMplyBee function isCsdHeterozygous() 
 
 ## Bug fixes
 

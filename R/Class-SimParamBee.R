@@ -336,6 +336,9 @@ SimParamBee <- R6Class(
         }
 
         # csd position and sitess
+        if (csdPos < 0 | csdPos > 1) {
+          stop("We are currently accepting the csdPos as the relative position on the chromosome [0-1], not bp.")
+        }
         private$.csdPos <- csdPos
         private$.nCsdAlleles <- nCsdAlleles
         private$.nCsdSites <- ceiling(log2(private$.nCsdAlleles))
@@ -343,7 +346,7 @@ SimParamBee <- R6Class(
         private$.csdPosStart <- floor(nLoci * private$.csdPos)
         csdPosStop <- private$.csdPosStart + private$.nCsdSites - 1
         if (csdPosStop > nLoci) {
-          stop(paste0("Too few segregagting sites to simulate ", private$.nCsdAlleles, " csd alleles at the given position!"))
+          stop(paste0("Too few segregating sites to simulate ", private$.nCsdAlleles, " csd alleles at the given position!"))
         } else {
           private$.csdPosStop <- csdPosStop
         }

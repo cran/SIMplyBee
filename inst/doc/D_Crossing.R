@@ -76,13 +76,20 @@ beekeeper2 <- cross(x = beekeeper2, drones = DCA, crossPlan = crossPlan1, checkC
 nFathers(beekeeper2)
 
 ## -----------------------------------------------------------------------------
+# Read locations from a file
+locations = read.csv("Colony_locations.csv")
 # Set location to apiaries
+beekeeper1_locations <- locations[locations$ColonyID %in% getId(beekeeper1),]
 beekeeper1 <-  setLocation(beekeeper1, 
-                           location = Map(c, runif(nColonies(beekeeper1), 0, 2*pi), runif(nColonies(beekeeper1), 0, 2*pi)))
+                           location = Map(c, beekeeper1_locations$X, beekeeper1_locations$Y))
+
+beekeeper2_locations <- locations[locations$ColonyID %in% getId(beekeeper2),]
 beekeeper2 <-  setLocation(beekeeper2, 
-                           location = Map(c, runif(nColonies(beekeeper2), 0, 2*pi), runif(nColonies(beekeeper2), 0, 2*pi)))
+                           location = Map(c, beekeeper2_locations$X, beekeeper2_locations$Y))
+
+beekeeper3_locations <- locations[locations$ColonyID %in% getId(beekeeper3),]
 beekeeper3 <-  setLocation(beekeeper3, 
-                           location = Map(c, runif(nColonies(beekeeper2), 0, 2*pi), runif(nColonies(beekeeper3), 0, 2*pi)))
+                           location = Map(c, beekeeper3_locations$X, beekeeper3_locations$Y))
 
 
 ## -----------------------------------------------------------------------------
@@ -114,10 +121,13 @@ beekeeper3 <- cross(x = beekeeper3,
 nFathers(beekeeper3)
 
 ## -----------------------------------------------------------------------------
+beekeeper4_locations <- locations[locations$ColonyID %in% getId(beekeeper4),]
 beekeeper4 <-  setLocation(beekeeper4, 
-                           location = Map(c, runif(nColonies(beekeeper4), 0, 2*pi), runif(nColonies(beekeeper4), 0, 2*pi)))
+                           location = Map(c, beekeeper4_locations$X, beekeeper4_locations$Y))
+
+beekeeper5_locations <- locations[locations$ColonyID %in% getId(beekeeper5),]
 beekeeper5 <-  setLocation(beekeeper5, 
-                           location = Map(c, runif(nColonies(beekeeper5), 0, 2*pi), runif(nColonies(beekeeper5), 0, 2*pi)))
+                           location = Map(c, beekeeper5_locations$X, beekeeper5_locations$Y))
 
 ## -----------------------------------------------------------------------------
 beekeeper4 <- cross(x = beekeeper4,

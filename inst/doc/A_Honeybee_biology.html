@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2024-08-26" />
+<meta name="date" content="2024-09-19" />
 
 <title>Honeybee biology</title>
 
@@ -354,7 +354,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">Honeybee biology</h1>
-<h4 class="date">2024-08-26</h4>
+<h4 class="date">2024-09-19</h4>
 
 
 
@@ -623,8 +623,8 @@ Simulation initiation
 <p>We can retrieve information about <em>CSD</em> alleles with <code>getCsdAlleles()</code>. For details on where the <em>CSD</em> locus is and the number of distinct alleles, see <code>help(SimParamBee)</code>. Looking at the below output, the first row shows marker identifications (chromosome_locus) and the first column shows haplotype identifications (individual_haplotype). The alleles are represented with a sequence of 0’s and 1’s. You can see that the two sequences are different, meaning that the queen is heterozygous, as expected.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="kw">getCsdAlleles</span>(queen)</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a><span class="co">#&gt;     3_86 3_87 3_88 3_89 3_90</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a><span class="co">#&gt; 2_1    0    1    1    1    0</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true"></a><span class="co">#&gt; 2_2    0    0    0    0    0</span></span></code></pre></div>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a><span class="co">#&gt; 2_1    1    0    1    0    1</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true"></a><span class="co">#&gt; 2_2    1    1    1    0    0</span></span></code></pre></div>
 <p>A keen geneticist would immediately inspect <em>CSD</em> alleles of fathers to check for any similarity with the queen’s <em>CSD</em> alleles. Let’s boost a chance of such an event by creating an inbreed colony. We will create a virgin queen from the current colony and mate her with her brothers. Oh, dear.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a>inbredColony &lt;-<span class="st"> </span><span class="kw">createColony</span>(<span class="dt">x =</span> <span class="kw">createVirginQueens</span>(<span class="dt">x =</span> colony, <span class="dt">nInd =</span> <span class="dv">1</span>))</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>fathers &lt;-<span class="st"> </span><span class="kw">selectInd</span>(drones, <span class="dt">nInd =</span> SP<span class="op">$</span>nFathers, <span class="dt">use =</span> <span class="st">&quot;rand&quot;</span>)</span>
@@ -634,21 +634,21 @@ Simulation initiation
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true"></a><span class="kw">getCsdAlleles</span>(inbredColony)</span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true"></a><span class="co">#&gt; $queen</span></span>
 <span id="cb28-8"><a href="#cb28-8" aria-hidden="true"></a><span class="co">#&gt;       3_86 3_87 3_88 3_89 3_90</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true"></a><span class="co">#&gt; 255_1    0    1    1    1    0</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true"></a><span class="co">#&gt; 255_2    1    1    1    0    0</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true"></a><span class="co">#&gt; 255_1    1    1    1    0    0</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true"></a><span class="co">#&gt; 255_2    1    0    0    0    1</span></span>
 <span id="cb28-11"><a href="#cb28-11" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb28-12"><a href="#cb28-12" aria-hidden="true"></a><span class="co">#&gt; $fathers</span></span>
 <span id="cb28-13"><a href="#cb28-13" aria-hidden="true"></a><span class="co">#&gt;       3_86 3_87 3_88 3_89 3_90</span></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true"></a><span class="co">#&gt; 254_1    0    1    1    1    0</span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true"></a><span class="co">#&gt; 249_1    0    0    0    0    0</span></span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true"></a><span class="co">#&gt; 250_1    0    0    0    0    0</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true"></a><span class="co">#&gt; 248_1    0    1    1    1    0</span></span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true"></a><span class="co">#&gt; 251_1    0    0    0    0    0</span></span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true"></a><span class="co">#&gt; 245_1    0    0    0    0    0</span></span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true"></a><span class="co">#&gt; 246_1    0    0    0    0    0</span></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true"></a><span class="co">#&gt; 247_1    0    0    0    0    0</span></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true"></a><span class="co">#&gt; 252_1    0    0    0    0    0</span></span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true"></a><span class="co">#&gt; 253_1    0    0    0    0    0</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true"></a><span class="co">#&gt; 248_1    1    1    1    0    0</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true"></a><span class="co">#&gt; 251_1    1    0    1    0    1</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true"></a><span class="co">#&gt; 252_1    1    1    1    0    0</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true"></a><span class="co">#&gt; 245_1    1    1    1    0    0</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true"></a><span class="co">#&gt; 254_1    1    1    1    0    0</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true"></a><span class="co">#&gt; 249_1    1    1    1    0    0</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true"></a><span class="co">#&gt; 253_1    1    0    1    0    1</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true"></a><span class="co">#&gt; 246_1    1    0    1    0    1</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true"></a><span class="co">#&gt; 250_1    1    1    1    0    0</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true"></a><span class="co">#&gt; 247_1    1    1    1    0    0</span></span>
 <span id="cb28-24"><a href="#cb28-24" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb28-25"><a href="#cb28-25" aria-hidden="true"></a><span class="co">#&gt; $workers</span></span>
 <span id="cb28-26"><a href="#cb28-26" aria-hidden="true"></a><span class="co">#&gt; NULL</span></span>
@@ -661,13 +661,13 @@ Simulation initiation
 <span id="cb28-33"><a href="#cb28-33" aria-hidden="true"></a><span class="kw">getCsdAlleles</span>(inbredColony, <span class="dt">unique =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb28-34"><a href="#cb28-34" aria-hidden="true"></a><span class="co">#&gt; $queen</span></span>
 <span id="cb28-35"><a href="#cb28-35" aria-hidden="true"></a><span class="co">#&gt;       3_86 3_87 3_88 3_89 3_90</span></span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true"></a><span class="co">#&gt; 255_1    0    1    1    1    0</span></span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true"></a><span class="co">#&gt; 255_2    1    1    1    0    0</span></span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true"></a><span class="co">#&gt; 255_1    1    1    1    0    0</span></span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true"></a><span class="co">#&gt; 255_2    1    0    0    0    1</span></span>
 <span id="cb28-38"><a href="#cb28-38" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb28-39"><a href="#cb28-39" aria-hidden="true"></a><span class="co">#&gt; $fathers</span></span>
 <span id="cb28-40"><a href="#cb28-40" aria-hidden="true"></a><span class="co">#&gt;       3_86 3_87 3_88 3_89 3_90</span></span>
-<span id="cb28-41"><a href="#cb28-41" aria-hidden="true"></a><span class="co">#&gt; 254_1    0    1    1    1    0</span></span>
-<span id="cb28-42"><a href="#cb28-42" aria-hidden="true"></a><span class="co">#&gt; 245_1    0    0    0    0    0</span></span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true"></a><span class="co">#&gt; 247_1    1    1    1    0    0</span></span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true"></a><span class="co">#&gt; 253_1    1    0    1    0    1</span></span>
 <span id="cb28-43"><a href="#cb28-43" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb28-44"><a href="#cb28-44" aria-hidden="true"></a><span class="co">#&gt; $workers</span></span>
 <span id="cb28-45"><a href="#cb28-45" aria-hidden="true"></a><span class="co">#&gt; NULL</span></span>
@@ -679,7 +679,7 @@ Simulation initiation
 <span id="cb28-51"><a href="#cb28-51" aria-hidden="true"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>Can you spot any matches? Let’s calculate the expected proportion of homozygous brood from this mating.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="kw">pHomBrood</span>(inbredColony)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a><span class="co">#&gt; [1] 0.1</span></span></code></pre></div>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a><span class="co">#&gt; [1] 0.35</span></span></code></pre></div>
 <p>Let’s see how many homozygotes will we observe. Note that inheritance is a random process, so a realised number of homozygotes will deviate from the expected proportion.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a>inbredColony &lt;-<span class="st"> </span><span class="kw">addWorkers</span>(inbredColony, <span class="dt">nInd =</span> <span class="dv">100</span>)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a>inbredColony</span>
@@ -688,7 +688,7 @@ Simulation initiation
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a><span class="co">#&gt; Location: 0 0 </span></span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true"></a><span class="co">#&gt; Queen: 255 </span></span>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true"></a><span class="co">#&gt; Number of fathers: 10 </span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true"></a><span class="co">#&gt; Number of workers: 92 </span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true"></a><span class="co">#&gt; Number of workers: 67 </span></span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true"></a><span class="co">#&gt; Number of drones: 0 </span></span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true"></a><span class="co">#&gt; Number of virgin queens: 0 </span></span>
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true"></a><span class="co">#&gt; Has split: FALSE </span></span>
@@ -697,8 +697,8 @@ Simulation initiation
 <span id="cb30-14"><a href="#cb30-14" aria-hidden="true"></a><span class="co">#&gt; Has collapsed: FALSE </span></span>
 <span id="cb30-15"><a href="#cb30-15" aria-hidden="true"></a><span class="co">#&gt; Is productive: FALSE</span></span>
 <span id="cb30-16"><a href="#cb30-16" aria-hidden="true"></a><span class="kw">nHomBrood</span>(inbredColony)</span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true"></a><span class="co">#&gt; [1] 8</span></span></code></pre></div>
-<p>We tried adding 100 workers, but we only got 92. The difference of 8 is due to <em>CSD</em> homozygous brood. Let’s add another set of workers to show variation in the realised numbers and accumulation of information.</p>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true"></a><span class="co">#&gt; [1] 33</span></span></code></pre></div>
+<p>We tried adding 100 workers, but we only got 67. The difference of 33 is due to <em>CSD</em> homozygous brood. Let’s add another set of workers to show variation in the realised numbers and accumulation of information.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>inbredColony &lt;-<span class="st"> </span><span class="kw">addWorkers</span>(inbredColony, <span class="dt">nInd =</span> <span class="dv">100</span>)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a>inbredColony</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a><span class="co">#&gt; An object of class &quot;Colony&quot; </span></span>
@@ -706,7 +706,7 @@ Simulation initiation
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true"></a><span class="co">#&gt; Location: 0 0 </span></span>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true"></a><span class="co">#&gt; Queen: 255 </span></span>
 <span id="cb31-7"><a href="#cb31-7" aria-hidden="true"></a><span class="co">#&gt; Number of fathers: 10 </span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true"></a><span class="co">#&gt; Number of workers: 179 </span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true"></a><span class="co">#&gt; Number of workers: 137 </span></span>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true"></a><span class="co">#&gt; Number of drones: 0 </span></span>
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true"></a><span class="co">#&gt; Number of virgin queens: 0 </span></span>
 <span id="cb31-11"><a href="#cb31-11" aria-hidden="true"></a><span class="co">#&gt; Has split: FALSE </span></span>
@@ -715,8 +715,8 @@ Simulation initiation
 <span id="cb31-14"><a href="#cb31-14" aria-hidden="true"></a><span class="co">#&gt; Has collapsed: FALSE </span></span>
 <span id="cb31-15"><a href="#cb31-15" aria-hidden="true"></a><span class="co">#&gt; Is productive: FALSE</span></span>
 <span id="cb31-16"><a href="#cb31-16" aria-hidden="true"></a><span class="kw">nHomBrood</span>(inbredColony)</span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true"></a><span class="co">#&gt; [1] 21</span></span></code></pre></div>
-<p>In total we tried adding 200 workers. We got 179 workers and 21 homozygous brood. To see all this information, we can inspect the miscellaneous slot of the queen that contains the fathers population as well as the cumulative number of workers, drones, homozygous brood, and the expected proportion of homozygous brood.</p>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true"></a><span class="co">#&gt; [1] 63</span></span></code></pre></div>
+<p>In total we tried adding 200 workers. We got 137 workers and 63 homozygous brood. To see all this information, we can inspect the miscellaneous slot of the queen that contains the fathers population as well as the cumulative number of workers, drones, homozygous brood, and the expected proportion of homozygous brood.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a><span class="kw">getMisc</span>(<span class="kw">getQueen</span>(inbredColony))</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a><span class="co">#&gt; $fathers</span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a><span class="co">#&gt; $fathers[[1]]</span></span>
@@ -729,16 +729,16 @@ Simulation initiation
 <span id="cb32-10"><a href="#cb32-10" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb32-11"><a href="#cb32-11" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb32-12"><a href="#cb32-12" aria-hidden="true"></a><span class="co">#&gt; $nWorkers</span></span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true"></a><span class="co">#&gt; [1] 179</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true"></a><span class="co">#&gt; [1] 137</span></span>
 <span id="cb32-14"><a href="#cb32-14" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb32-15"><a href="#cb32-15" aria-hidden="true"></a><span class="co">#&gt; $nDrones</span></span>
 <span id="cb32-16"><a href="#cb32-16" aria-hidden="true"></a><span class="co">#&gt; [1] 0</span></span>
 <span id="cb32-17"><a href="#cb32-17" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb32-18"><a href="#cb32-18" aria-hidden="true"></a><span class="co">#&gt; $nHomBrood</span></span>
-<span id="cb32-19"><a href="#cb32-19" aria-hidden="true"></a><span class="co">#&gt; [1] 21</span></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true"></a><span class="co">#&gt; [1] 63</span></span>
 <span id="cb32-20"><a href="#cb32-20" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb32-21"><a href="#cb32-21" aria-hidden="true"></a><span class="co">#&gt; $pHomBrood</span></span>
-<span id="cb32-22"><a href="#cb32-22" aria-hidden="true"></a><span class="co">#&gt; [1] 0.1</span></span></code></pre></div>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true"></a><span class="co">#&gt; [1] 0.35</span></span></code></pre></div>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
